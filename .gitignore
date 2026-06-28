@@ -1,0 +1,7 @@
+node_modules/
+.next/
+out/
+.env*.local
+data/garmin/
+*.tsbuildinfo
+next-env.d.ts

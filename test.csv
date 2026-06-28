@@ -1,0 +1,12 @@
+Type,Date,Semaine,Discipline,Description,Objectif,Matériel Nécessaire,Notes
+Test,FTP Vélo,23/07/2026,4,Vélo,"Test 20 min all-out sur home-trainer ou route plate. FTP = Puissance moyenne x 0.95.","Augmenter FTP de 10–15% (ex: 190W → 210W)","Home-trainer, capteur de puissance (optionnel), Garmin Edge","Faire à jeun ou 2h après un repas léger. Échauffement : 10 min Zone 2 + 3x1min à 90% FTP."
+Test,1.5K Natation,24/07/2026,4,Natation,"1.5K en piscine ou eau libre. Chronométré.","<28:00 (1:50/100m)","Combinaison (si eau libre), chronomètre, pull buoy (optionnel)","Échauffement : 200m facile + 4x50m accélérations."
+Test,10K Course,21/08/2026,8,Course,"10K standalone sur piste ou route plate. Chronométré.","<40:00 (4:00/km)","Montre Garmin, chaussures de course","Échauffement : 10 min footing + 5x100m accélérations."
+Test,Brick Test,04/09/2026,10,Vélo + Course,"40K vélo avec 800m D+ à allure race + 5K course. Chronométré.","Vélo <1h25, Course <22:00","Vélo, chaussures de course, 2 bidons, 2 gels","Faire en condition réelle (même heure que la course)."
+Test,FTP Vélo,20/08/2026,8,Vélo,"Test 20 min all-out pour mesurer la progression.","Comparer avec test semaine 4.","Home-trainer, capteur de puissance","Échauffement identique au test semaine 4."
+Échéance,Mariage,21–23/08/2026,-,-,,"Volume d'entraînement réduit de 50%. Séances légères (natation, vélo facile).","-,-,"Profite de la coupure pour récupérer mentalement."
+Échéance,Vacances,24–30/08/2026,-,-,,"1–2 séances/jour. Focus sur le plaisir et la récupération.","-,-,"Idéal pour des sorties vélo en montagne (ex: Alpes)."
+Échéance,Jeûne Genevois,14/09/2026,11,-,,"Longue sortie vélo + brick (ex: 50K vélo + 8K course).","-,-,"Tester la nutrition et l’hydratation en condition réelle."
+Échéance,Taper Début,07/09/2026,11,-,,"Réduire le volume de 30%. Garder l’intensité.","-,-,"Focus sur la récupération et la préparation mentale."
+Échéance,Taper Strict,14/09/2026,12,-,,"Réduire le volume de 50%. Séances très légères.","-,-,"Priorité à la visualisation et aux étirements."
+Échéance,Race Day,27/09/2026,13,-,,"M-Olympia Triathlon. Objectif : 2h30–3h00.","Combinaison, vélo, chaussures de course, nutrition, hydratation","Arriver 1h avant. Échauffement : 10 min natation + 5 min vélo + 5 min course."
