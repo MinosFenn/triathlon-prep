@@ -39,7 +39,10 @@ export function getWeekTracking(weekNum: number): WeekTracking {
   try {
     const raw = localStorage.getItem(`${NOTES_PREFIX}${weekNum}`);
     if (!raw) return {};
-    const parsed = JSON.parse(raw) as Record<string, Partial<DayTracking & { adjusted?: string }>>;
+    const parsed = JSON.parse(raw) as Record<
+      string,
+      Partial<DayTracking & { adjusted?: string }>
+    >;
     const result: WeekTracking = {};
     for (const [key, value] of Object.entries(parsed)) {
       result[key] = {
@@ -50,6 +53,82 @@ export function getWeekTracking(weekNum: number): WeekTracking {
     return result;
   } catch {
     return {};
+  }
+}
+
+export function saveWeekTracking(
+  weekNum: number,
+  tracking: Record<string, { note: string; completed?: boolean }>
+): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(`${NOTES_PREFIX}${weekNum}`, JSON.stringify(tracking));
+}
+
+const CURRENT_WEEK_KEY = "triathlon-current-week";
+
+export function getSavedCurrentWeek(defaultWeek = 1): number {
+  if (typeof window === "undefined") return defaultWeek;
+  try {
+    const raw = localStorage.getItem(CURRENT_WEEK_KEY);
+    if (!raw) return defaultWeek;
+    const n = parseInt(raw, 10);
+    return Number.isFinite(n) && n >= 1 ? n : defaultWeek;
+  } catch {
+    return defaultWeek;
+  }
+}
+
+export function saveCurrentWeek(weekNum: number): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(CURRENT_WEEK_KEY, String(weekNum));
+}
+
+/** Full backup of validations + notes + bonus (no server needed). */
+export function exportTrackingBackup(): string {
+  if (typeof window === "undefined") return "{}";
+  const backup: Record<string, unknown> = {
+    exportedAt: new Date().toISOString(),
+    currentWeek: getSavedCurrentWeek(),
+    weeks: {} as Record<string, unknown>,
+    bonus: {} as Record<string, unknown>,
+  };
+
+  for (let w = 1; w <= 13; w++) {
+    const notes = localStorage.getItem(`${NOTES_PREFIX}${w}`);
+    if (notes) (backup.weeks as Record<string, string>)[String(w)] = JSON.parse(notes);
+    const bonus = localStorage.getItem(`triathlon-bonus-week-${w}`);
+    if (bonus) (backup.bonus as Record<string, string>)[String(w)] = JSON.parse(bonus);
+  }
+
+  return JSON.stringify(backup, null, 2);
+}
+
+export function importTrackingBackup(json: string): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const data = JSON.parse(json) as {
+      currentWeek?: number;
+      weeks?: Record<string, unknown>;
+      bonus?: Record<string, unknown>;
+    };
+    if (data.weeks) {
+      for (const [week, notes] of Object.entries(data.weeks)) {
+        localStorage.setItem(`${NOTES_PREFIX}${week}`, JSON.stringify(notes));
+      }
+    }
+    if (data.bonus) {
+      for (const [week, bonus] of Object.entries(data.bonus)) {
+        localStorage.setItem(
+          `triathlon-bonus-week-${week}`,
+          JSON.stringify(bonus)
+        );
+      }
+    }
+    if (data.currentWeek) saveCurrentWeek(data.currentWeek);
+    window.dispatchEvent(new Event("triathlon-tracking-update"));
+    return true;
+  } catch {
+    return false;
   }
 }
 

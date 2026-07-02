@@ -183,8 +183,8 @@ export function StatsDashboard({ data }: StatsDashboardProps) {
               discipline.
             </li>
             <li>
-              Coche les étirements, mental, compléments et renforcement sur
-              chaque jour pour des points bonus (+4 à +6 pts).
+              Coche chaque bloc (étirements, mental, compléments, renforcement)
+              sur la journée pour des points bonus (+4 à +6 pts par bloc).
             </li>
             <li>Coche &laquo; Validée &raquo; sur la séance pour les points sport.</li>
             <li>

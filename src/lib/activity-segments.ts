@@ -113,8 +113,11 @@ function parseTimingToken(token: string): { minutes: number; label?: string } {
   const secPerLimb = t.match(/(\d+)\s*s(?:ec)?\s*\/?\s*(jambe|bras|côté|cote|pied)/);
   if (secPerLimb) {
     const sec = parseInt(secPerLimb[1], 10);
-    const minutes = Math.max(1, Math.round((sec * 2) / 60));
-    return { minutes, label: `${secPerLimb[1]}s/${secPerLimb[2]}` };
+    const minutes = (sec * 2) / 60;
+    return {
+      minutes: Math.round(minutes * 10) / 10,
+      label: `${secPerLimb[1]}s/${secPerLimb[2]}`,
+    };
   }
 
   const secFixed = t.match(/(\d+)\s*s(?:ec)?(?:\s*\/?\s*côté)?/);
@@ -132,11 +135,8 @@ function parseTimingToken(token: string): { minutes: number; label?: string } {
   }
 
   const setsMatch = t.match(/(\d+)\s*[x×]\s*(\d+)/);
-  if (setsMatch) {
-    const sets = parseInt(setsMatch[1], 10);
-    const reps = parseInt(setsMatch[2], 10);
-    const minutes = Math.max(2, Math.round((sets * reps * 4) / 60));
-    return { minutes, label: `${sets}×${reps}` };
+  if (setsMatch && !t.includes("min")) {
+    return { minutes: 0, label: `${setsMatch[1]}×${setsMatch[2]}` };
   }
 
   return { minutes: 0 };
@@ -176,14 +176,15 @@ export function parseStrengthSegments(
   }
 
   const setsLabel = setsPart?.trim();
+  const sessionMin = parseTotalMinutes(sessionDuration ?? "25 min");
   const perExerciseMin = setsLabel
-    ? Math.max(2, Math.round(parseTotalMinutes(sessionDuration ?? "25 min") / items.length))
+    ? Math.max(3, Math.round(sessionMin / items.length))
     : 4;
 
   return items.map((name) => ({
     label: name,
     description: setsLabel ?? "",
     durationMin: perExerciseMin,
-    durationLabel: setsLabel,
+    durationLabel: setsLabel || `${perExerciseMin} min`,
   }));
 }

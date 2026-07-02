@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { TrainingSession } from "@/types";
 import { getDisciplineStyle } from "@/lib/discipline";
 import { formatDuration } from "@/lib/session-meta";
@@ -33,6 +33,14 @@ export function SessionCard({
   );
   const [completed, setCompleted] = useState(initialCompleted);
   const isRecovery = session.disciplineKey === "recovery";
+
+  useEffect(() => {
+    setCompleted(initialCompleted);
+  }, [initialCompleted]);
+
+  useEffect(() => {
+    setNote(initialNote || (isTest ? "" : session.notes || ""));
+  }, [initialNote, isTest, session.notes]);
 
   return (
     <GlassCard className="p-5 mb-3">

@@ -190,6 +190,7 @@ function parseTrainingWeekMarkdown(content: string): TrainingSession[] {
         day: jour,
         dayShort: DAY_SHORT[jour] ?? jour.slice(0, 3),
         date: "",
+        dateIso: "",
         discipline: style.label,
         disciplineKey: style.key,
         type: seance,
@@ -293,6 +294,7 @@ function generateFallbackSessions(weekNum: number): TrainingSession[] {
         day,
         dayShort: DAY_SHORT[day],
         date: "",
+        dateIso: "",
         discipline: partial?.discipline ?? "Récupération",
         disciplineKey: key,
         type,
@@ -315,6 +317,7 @@ function generateFallbackSessions(weekNum: number): TrainingSession[] {
       day,
       dayShort: DAY_SHORT[day],
       date: "",
+      dateIso: "",
       discipline: "Récupération",
       disciplineKey: "recovery" as DisciplineKey,
       type,
@@ -397,6 +400,7 @@ export function enrichSessionsWithDates(
     const date = new Date(startDate);
     date.setDate(startDate.getDate() + offset);
     const dateStr = `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}`;
-    return { ...session, date: dateStr };
+    const dateIso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    return { ...session, date: dateStr, dateIso };
   });
 }

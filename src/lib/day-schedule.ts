@@ -90,16 +90,17 @@ function timingMatches(timing: string | undefined, ...keywords: string[]): boole
 
 function attachTracking(
   activity: Omit<DayActivity, "trackingId" | "segmentTrackingIds">,
+  weekNum: number,
   dayIndex: number,
   slotId: ScheduleSlotId,
   activityIndex: number
 ): DayActivity {
   const segmentTrackingIds = activity.segments.map((_, si) =>
-    buildSegmentTrackingId(dayIndex, slotId, activityIndex, si)
+    buildSegmentTrackingId(weekNum, dayIndex, slotId, activityIndex, si)
   );
   return {
     ...activity,
-    trackingId: buildActivityTrackingId(dayIndex, slotId, activityIndex),
+    trackingId: buildActivityTrackingId(weekNum, dayIndex, slotId, activityIndex),
     segmentTrackingIds,
   };
 }
@@ -108,6 +109,7 @@ function stretchActivity(
   title: string,
   details: string,
   duration: string | undefined,
+  weekNum: number,
   dayIndex: number,
   slotId: ScheduleSlotId,
   activityIndex: number
@@ -121,6 +123,7 @@ function stretchActivity(
       duration,
       segments,
     },
+    weekNum,
     dayIndex,
     slotId,
     activityIndex
@@ -131,6 +134,7 @@ function mentalActivity(
   activity: string,
   timing: string | undefined,
   duration: string | undefined,
+  weekNum: number,
   dayIndex: number,
   slotId: ScheduleSlotId,
   activityIndex: number
@@ -145,6 +149,7 @@ function mentalActivity(
       duration,
       segments,
     },
+    weekNum,
     dayIndex,
     slotId,
     activityIndex
@@ -153,6 +158,7 @@ function mentalActivity(
 
 function strengthActivity(
   session: StrengthSession,
+  weekNum: number,
   dayIndex: number,
   slotId: ScheduleSlotId,
   activityIndex: number
@@ -166,6 +172,7 @@ function strengthActivity(
       duration: session.duration,
       segments,
     },
+    weekNum,
     dayIndex,
     slotId,
     activityIndex
@@ -175,6 +182,7 @@ function strengthActivity(
 function supplementActivity(
   timing: DailySupplementEntry["timing"],
   entries: DailySupplementEntry[],
+  weekNum: number,
   dayIndex: number,
   slotId: ScheduleSlotId,
   activityIndex: number
@@ -193,6 +201,7 @@ function supplementActivity(
       details: entries.map((e) => `${e.name} (${e.dose})`).join(" · "),
       segments,
     },
+    weekNum,
     dayIndex,
     slotId,
     activityIndex
@@ -204,6 +213,7 @@ function pushSupplements(
   slotId: ScheduleSlotId,
   timing: DailySupplementEntry["timing"],
   entries: DailySupplementEntry[],
+  weekNum: number,
   dayIndex: number
 ) {
   const filtered = entries.filter((e) => e.timing === timing);
@@ -216,7 +226,14 @@ function pushSupplements(
   }
 
   slot.activities.push(
-    supplementActivity(timing, filtered, dayIndex, slotId, slot.activities.length)
+    supplementActivity(
+      timing,
+      filtered,
+      weekNum,
+      dayIndex,
+      slotId,
+      slot.activities.length
+    )
   );
 }
 
@@ -261,6 +278,7 @@ export function buildDaySchedule(
         "Étirements dynamiques + respiration",
         matinRoutine.stretches,
         matinRoutine.duration,
+        weekNum,
         dayIndex,
         "reveil",
         reveilActivities.length
@@ -273,6 +291,7 @@ export function buildDaySchedule(
         mentalEntry.activity,
         mentalEntry.timing,
         mentalEntry.duration,
+        weekNum,
         dayIndex,
         "reveil",
         reveilActivities.length
@@ -282,7 +301,7 @@ export function buildDaySchedule(
   if (reveilActivities.length > 0) {
     slots.push({ id: "reveil", label: SLOT_LABELS.reveil, activities: reveilActivities });
   }
-  pushSupplements(slots, "reveil", "matin", dailySupplements, dayIndex);
+  pushSupplements(slots, "reveil", "matin", dailySupplements, weekNum, dayIndex);
 
   if (training) {
     const avantActivities: DayActivity[] = [];
@@ -291,6 +310,7 @@ export function buildDaySchedule(
         "Échauffement dynamique",
         stretching.preWorkout,
         "5–10 min",
+        weekNum,
         dayIndex,
         "avant_seance",
         avantActivities.length
@@ -302,6 +322,7 @@ export function buildDaySchedule(
           mentalEntry.activity,
           mentalEntry.timing,
           mentalEntry.duration,
+          weekNum,
           dayIndex,
           "avant_seance",
           avantActivities.length
@@ -312,7 +333,7 @@ export function buildDaySchedule(
   }
 
   slots.push({ id: "seance", label: SLOT_LABELS.seance, activities: [] });
-  pushSupplements(slots, "midi", "midi", dailySupplements, dayIndex);
+  pushSupplements(slots, "midi", "midi", dailySupplements, weekNum, dayIndex);
 
   if (training) {
     const apresActivities: DayActivity[] = [];
@@ -322,6 +343,7 @@ export function buildDaySchedule(
           "Étirements statiques",
           postRoutine.stretches,
           postRoutine.duration,
+          weekNum,
           dayIndex,
           "apres_seance",
           apresActivities.length
@@ -333,6 +355,7 @@ export function buildDaySchedule(
           "Étirements statiques",
           stretching.postWorkout,
           "10–15 min",
+          weekNum,
           dayIndex,
           "apres_seance",
           apresActivities.length
@@ -345,6 +368,7 @@ export function buildDaySchedule(
           mentalEntry.activity,
           mentalEntry.timing,
           mentalEntry.duration,
+          weekNum,
           dayIndex,
           "apres_seance",
           apresActivities.length
@@ -353,14 +377,14 @@ export function buildDaySchedule(
     }
     slots.push({ id: "apres_seance", label: SLOT_LABELS.apres_seance, activities: apresActivities });
   }
-  pushSupplements(slots, "apres_seance", "post", dailySupplements, dayIndex);
+  pushSupplements(slots, "apres_seance", "post", dailySupplements, weekNum, dayIndex);
 
   if (strengthEntry) {
     slots.push({
       id: "renforcement",
       label: SLOT_LABELS.renforcement,
       activities: [
-        strengthActivity(strengthEntry, dayIndex, "renforcement", 0),
+        strengthActivity(strengthEntry, weekNum, dayIndex, "renforcement", 0),
       ],
     });
   }
@@ -372,6 +396,7 @@ export function buildDaySchedule(
         "Étirements du soir",
         soirRoutine.stretches,
         soirRoutine.duration,
+        weekNum,
         dayIndex,
         "soir",
         soirActivities.length
@@ -388,6 +413,7 @@ export function buildDaySchedule(
         mentalEntry.activity,
         mentalEntry.timing,
         mentalEntry.duration,
+        weekNum,
         dayIndex,
         "soir",
         soirActivities.length
@@ -397,7 +423,7 @@ export function buildDaySchedule(
   if (soirActivities.length > 0) {
     slots.push({ id: "soir", label: SLOT_LABELS.soir, activities: soirActivities });
   }
-  pushSupplements(slots, "soir", "soir", dailySupplements, dayIndex);
+  pushSupplements(slots, "soir", "soir", dailySupplements, weekNum, dayIndex);
 
   return sortSlots(slots);
 }

@@ -43,20 +43,17 @@ export function DayActivityCard({
 }: DayActivityCardProps) {
   const style = CATEGORY_STYLES[activity.category];
   const hasSegments = activity.segments.length > 0;
-  const totalMin = activity.segments.reduce((s, seg) => s + seg.durationMin, 0);
+  const segmentTotal = activity.segments.reduce((s, seg) => s + seg.durationMin, 0);
+  const hintTotal = parseDurationHint(activity.duration);
+  const displayTotal = hintTotal ?? (segmentTotal > 0 ? segmentTotal : null);
   const points = bonusPointsForCategory(activity.category);
   const activityChecked = Boolean(bonusCompleted[activity.trackingId]);
-
-  const completedSegments = activity.segmentTrackingIds.filter(
-    (id) => bonusCompleted[id]
-  ).length;
-  const segmentBonusEarned = completedSegments * points;
 
   return (
     <GlassCard className={`p-4 border-l-2 ${style.border}`}>
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-start gap-2 min-w-0 flex-1">
-          {!hasSegments && onBonusToggle && (
+          {onBonusToggle && (
             <label className="flex shrink-0 items-center pt-0.5 cursor-pointer">
               <input
                 type="checkbox"
@@ -84,18 +81,18 @@ export function DayActivityCard({
           </div>
         </div>
         <div className="text-right shrink-0">
-          {segmentBonusEarned > 0 && (
+          {activityChecked && (
             <p className="text-[10px] font-semibold text-violet-300 tabular-nums">
-              +{segmentBonusEarned} bonus
+              +{points} bonus
             </p>
           )}
-          {hasSegments && totalMin > 0 && (
+          {hasSegments && displayTotal !== null && displayTotal > 0 && (
             <>
               <p className="text-sm font-bold text-white tabular-nums leading-none">
-                {formatDuration(totalMin)}
+                {formatDuration(displayTotal)}
               </p>
               <p className="text-[10px] text-slate-500 uppercase tracking-wide mt-0.5">
-                total
+                {activity.duration ? "prévu" : "total"}
               </p>
             </>
           )}
@@ -108,13 +105,7 @@ export function DayActivityCard({
       </div>
 
       {hasSegments ? (
-        <SegmentList
-          segments={activity.segments}
-          category={activity.category}
-          segmentTrackingIds={activity.segmentTrackingIds}
-          bonusCompleted={bonusCompleted}
-          onBonusToggle={onBonusToggle}
-        />
+        <SegmentList segments={activity.segments} />
       ) : (
         <p className="text-sm text-slate-400 leading-relaxed pl-6">
           {activity.details}
@@ -122,6 +113,17 @@ export function DayActivityCard({
       )}
     </GlassCard>
   );
+}
+
+function parseDurationHint(hint?: string): number | null {
+  if (!hint) return null;
+  const range = hint.match(/(\d+)\s*[–-]\s*(\d+)/);
+  if (range) {
+    return Math.round((parseInt(range[1], 10) + parseInt(range[2], 10)) / 2);
+  }
+  const min = hint.match(/(\d+)\s*min/i);
+  if (min) return parseInt(min[1], 10);
+  return null;
 }
 
 interface DayScheduleSectionProps {

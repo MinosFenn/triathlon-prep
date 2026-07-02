@@ -22,10 +22,10 @@ export function getDayBonusTracking(
   dayIndex: number
 ): BonusTracking {
   const all = getBonusTracking(weekNum);
-  const prefix = `d${dayIndex}-`;
+  const prefix = `w${weekNum}-d${dayIndex}-`;
   const result: BonusTracking = {};
   for (const [key, value] of Object.entries(all)) {
-    if (key.startsWith(prefix)) result[key] = value;
+    if (key.startsWith(prefix) && value) result[key] = true;
   }
   return result;
 }

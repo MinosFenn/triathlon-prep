@@ -12,6 +12,8 @@ export interface TrainingSession {
   day: string;
   dayShort: string;
   date: string;
+  /** YYYY-MM-DD pour météo et tri */
+  dateIso: string;
   discipline: string;
   disciplineKey: DisciplineKey;
   type: string;

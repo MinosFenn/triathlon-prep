@@ -2,7 +2,7 @@
 
 Document de suivi des **fonctionnalités en cours**, **à développer**, **points de vigilance** et **évolutions futures**.
 
-*Dernière mise à jour : 28/06/2026*
+*Dernière mise à jour : 02/07/2026*
 
 ---
 
@@ -14,6 +14,8 @@ Document de suivi des **fonctionnalités en cours**, **à développer**, **point
 | Vue jour (séances, étirements, mental, renforcement, compléments) | ✅ Opérationnel |
 | Points séances + bonus (checkboxes) | ✅ Opérationnel |
 | Statistiques (empilées par sport, affûtage) | ✅ Opérationnel |
+| Météo (Open-Meteo, conseils par sport) | 🟡 Phase 1 — Genève par défaut, sans lieux |
+| Lieux / circuits / travail / créneaux | ❌ Planifié (voir §2) |
 | Garmin Connect | 🟡 Code en place, **non validé en production** |
 | Ajustement IA depuis les ressentis | ❌ Non implémenté (placeholder UI) |
 
@@ -92,7 +94,117 @@ LLM_MODEL=mistral-small-latest
 
 ---
 
-## 2. Garmin Connect — Activity API
+---
+
+## 2. Lieux, lieu de travail & plages horaires
+
+Complément à la **météo** (déjà en place via Open-Meteo + `/api/weather`) : personnaliser *où* s’entraîner, *d’où* on part (travail / domicile), et *quand* c’est réaliste dans la journée.
+
+### Situation actuelle (météo)
+
+| Composant | Fichier / route |
+|-----------|-----------------|
+| API Open-Meteo (gratuit, sans clé) | `src/lib/weather/open-meteo.ts` |
+| Route serveur + cache | `/api/weather` |
+| Conseils par discipline | `src/lib/weather/recommendations.ts` |
+| Bandeau vue jour | `DayWeatherBanner` dans `DayTab` |
+| Coordonnées par défaut | `.env` → `WEATHER_DEFAULT_LAT/LON` (Genève) |
+
+**Limite actuelle :** une seule position (Genève). Pas encore de circuits recommandés ni de lien avec le travail ou les horaires.
+
+---
+
+### Phase 1 — Fichier `locations.json` (circuits & spots)
+
+**Objectif :** source de vérité éditable pour les lieux d’entraînement préconisés.
+
+| Tâche | Détail |
+|-------|--------|
+| Fichier `locations.json` | Id, nom, `disciplines[]`, lat/lon, type (`pool`, `open_water`, `road`, `trail`, `indoor`) |
+| Circuits vélo | Distance, D+, lien Strava/Komoot, notes (ex. Col de la Faucille, boucles lac) |
+| Spots natation | Piscines, eau libre (Bains des Pâquis, etc.), seuil combinaison |
+| Parcours course | Parcs, sentiers, surface |
+| Fallback indoor | Home-trainer, tapis — lié aux alertes météo (pluie / vent) |
+| Loader | `src/lib/data/load-locations.ts` → `loadAppData()` |
+| UI | Carte lieu du jour sous le bandeau météo + lien Google Maps |
+| API météo | `/api/weather?locationId=…` ou `lat`/`lon`/`label` par spot |
+
+**Règles d’association séance ↔ lieu (progressif) :**
+
+1. Par défaut : `sessionDefaults` dans JSON (ex. natation → piscine X)
+2. Par jour / type : `bestFor` sur chaque lieu
+3. (Optionnel) Colonne **Lieu** dans `training_semaine{N}.md`
+
+---
+
+### Phase 2 — Lieu de travail
+
+**Objectif :** adapter les recommandations de lieu et de créneau au contexte pro (trajets, matériel sur place).
+
+| Tâche | Détail |
+|-------|--------|
+| Entrée `workplace` | Dans `locations.json` ou section dédiée : adresse, lat/lon, nom employeur |
+| Entrée `home` | Domicile (optionnel) pour calcul « depuis la maison » vs « depuis le bureau » |
+| Météo multi-points | Météo domicile / bureau / spot séance si coords différentes |
+| Contraintes | Jours télétravail vs bureau (ex. natation midi seulement si piscine proche bureau) |
+| UI paramètres | `/parametres` : adresse travail, jours au bureau (localStorage ou `.env` perso) |
+| Suggestions | « Séance vélo : départ bureau → boucle X → retour » |
+
+**Variables d’environnement possibles :**
+
+```env
+WORKPLACE_LAT=
+WORKPLACE_LON=
+WORKPLACE_LABEL=Bureau
+HOME_LAT=
+HOME_LON=
+```
+
+---
+
+### Phase 3 — Plages horaires d’entraînement
+
+**Objectif :** croiser plan du jour, météo et disponibilités réelles pour proposer *quand* faire la séance.
+
+| Tâche | Détail |
+|-------|--------|
+| Fichier ou config | `schedule-preferences.json` ou bloc dans `global_information.md` / paramètres |
+| Créneaux préférés | Ex. matin 6h–8h, midi 12h–13h, soir 18h–20h |
+| Créneaux bloqués | Réunions récurrentes, heures de bureau fixes |
+| Lien timeline app | Mapper créneaux aux slots existants (`réveil`, `avant séance`, `séance`, `soir`) |
+| Météo horaire | Open-Meteo `hourly` : pluie / vent prévus sur le créneau choisi |
+| Recommandation | « Vélo 18h : vent 45 km/h → home-trainer ou décaler à 7h demain » |
+| UI | Badge « Créneau suggéré : 7h00 » sur l’en-tête jour |
+
+**Exemples de règles :**
+
+- Natation midi uniquement si `workplace` à < 15 min d’une piscine
+- Longue sortie vélo : samedi matin si météo OK entre 8h et 12h
+- Brick : créneau minimum 2h30 libre consécutif
+
+---
+
+### Phase 4 — Synthèse « plan du jour intelligent »
+
+| Entrée | Sortie |
+|--------|--------|
+| Séance planifiée (markdown) | Lieu recommandé + lien Maps |
+| Météo (spot + horaire) | Alertes OK / Prudence / Attention |
+| Travail + plages horaires | Créneau optimal + alternative indoor |
+| (Futur) Garmin | Ajuster si séance déjà faite à un autre créneau |
+
+---
+
+### Priorité lieux / travail / horaires
+
+1. **`locations.json` + affichage lieu du jour** (extension naturelle de la météo)
+2. **Lieu de travail** dans paramètres (lat/lon suffisent)
+3. **Plages horaires** + prévisions horaires Open-Meteo
+4. **Colonne Lieu** dans les markdown semaine (optionnel, plus fin)
+
+---
+
+## 3. Garmin Connect — Activity API
 
 Référence : [Garmin Connect Developer Program — Activity API](https://developer.garmin.com/gc-developer-program/activity-api/)
 
@@ -136,7 +248,7 @@ Référence : [Garmin Connect Developer Program — Activity API](https://develo
 
 ---
 
-## 3. Points de vigilance
+## 4. Points de vigilance
 
 ### Données & persistance
 
@@ -165,7 +277,7 @@ Référence : [Garmin Connect Developer Program — Activity API](https://develo
 
 ---
 
-## 4. Améliorations recommandées (court terme)
+## 5. Améliorations recommandées (court terme)
 
 | Domaine | Amélioration |
 |---------|--------------|
@@ -181,7 +293,13 @@ Référence : [Garmin Connect Developer Program — Activity API](https://develo
 
 ---
 
-## 5. Futurs développements (moyen / long terme)
+## 6. Futurs développements (moyen / long terme)
+
+### Lieu & mobilité (après §2)
+
+- Carte interactive (Leaflet / Mapbox) avec circuits vélo et spots natation.
+- Import GPX des parcours favoris.
+- Estimation temps trajet domicile / bureau → spot (API routing optionnelle).
 
 ### Coach agent (vision `global_information.md`)
 
@@ -210,12 +328,15 @@ Référence : [Garmin Connect Developer Program — Activity API](https://develo
 
 ---
 
-## 6. Fichiers de référence
+## 7. Fichiers de référence
 
 | Fichier | Rôle |
 |---------|------|
 | `global_information.md` | Contexte athlète + spec agent Mistral |
-| `.env.example` | Variables Garmin, Redis, app URL |
+| `.env.example` | Variables Garmin, Redis, météo, app URL |
+| `locations.json` *(à créer)* | Circuits, piscines, spots, fallback indoor |
+| `src/lib/weather/` | Météo Open-Meteo + recommandations sport |
+| `src/app/api/weather/route.ts` | API météo côté serveur |
 | `src/lib/storage/tracking.ts` | Points séances + bonus |
 | `src/lib/garmin/` | Intégration Garmin |
 | `src/components/sessions/SessionCard.tsx` | Ressentis (placeholder IA) |
@@ -223,13 +344,15 @@ Référence : [Garmin Connect Developer Program — Activity API](https://develo
 
 ---
 
-## 7. Priorisation suggérée
+## 8. Priorisation suggérée
 
 1. **Garmin E2E en production** (valeur immédiate, sync auto séances)
-2. **Export ressentis (Phase IA 1)** — faible effort, utile tout de suite
-3. **Backup localStorage** — sécuriser les données utilisateur
-4. **API ajustement IA (Phase 2)** — quand clé LLM disponible
-5. **BDD + auth** — avant multi-appareils ou multi-utilisateurs
+2. **`locations.json` + lien météo par spot** (§2 Phase 1)
+3. **Export ressentis (Phase IA 1)** — faible effort, utile tout de suite
+4. **Backup localStorage** — sécuriser les données utilisateur
+5. **Lieu de travail + plages horaires** (§2 Phases 2–3)
+6. **API ajustement IA (Phase 2)** — quand clé LLM disponible
+7. **BDD + auth** — avant multi-appareils ou multi-utilisateurs
 
 ---
 

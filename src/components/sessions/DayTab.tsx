@@ -8,6 +8,7 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import { SportBadge } from "./SportBadge";
 import { SessionCard } from "./SessionCard";
 import { DayActivityCard, DayScheduleSection } from "./DayActivityCard";
+import { DayWeatherBanner } from "@/components/weather/DayWeatherBanner";
 
 interface DayTabProps {
   day: TrainingSession;
@@ -51,13 +52,18 @@ export function DayTab({
         <div className={`mt-4 h-1 rounded-full ${style.bg} border ${style.border}`} />
       </GlassCard>
 
+      <DayWeatherBanner
+        disciplineKey={day.disciplineKey}
+        dateIso={day.dateIso}
+      />
+
       {schedule.map((slot) => {
         if (slot.id === "seance") {
           return (
             <DayScheduleSection key={slot.id} label={slot.label}>
               {sessions.map((session, index) => (
                 <SessionCard
-                  key={index}
+                  key={session.day}
                   session={session}
                   onNoteChange={onNoteChange}
                   initialNote={savedNote}

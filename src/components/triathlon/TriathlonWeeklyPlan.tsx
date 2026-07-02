@@ -4,19 +4,26 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { AppData, DayTabId, WeekPlan } from "@/types";
 import { getDisciplineStyle } from "@/lib/discipline";
 import { buildDaySchedule } from "@/lib/day-schedule";
+import { filterBonusTrackingForDay } from "@/lib/bonus-points";
 import {
   getBonusTracking,
   saveBonusTracking,
   type BonusTracking,
 } from "@/lib/storage/bonus-tracking";
+import {
+  applyGarminMatchesToNotes,
+  useGarminMatches,
+} from "@/hooks/useGarminMatches";
 import { OverviewTab } from "@/components/overview/OverviewTab";
 import { DayTab } from "@/components/sessions/DayTab";
 import { SportIcon } from "@/components/sessions/SportIcon";
 import { BottomNav } from "@/components/layout/BottomNav";
 import {
-  applyGarminMatchesToNotes,
-  useGarminMatches,
-} from "@/hooks/useGarminMatches";
+  getSavedCurrentWeek,
+  getWeekTracking,
+  saveCurrentWeek,
+  saveWeekTracking,
+} from "@/lib/storage/tracking";
 
 const DAY_TAB_IDS: DayTabId[] = [
   "overview",
@@ -57,52 +64,82 @@ export function TriathlonWeeklyPlan({ data }: TriathlonWeeklyPlanProps) {
     plan.weeks.find((w) => w.num === currentWeek) ?? plan.weeks[0];
 
   const { matches, isGarminMatched, connected: garminConnected } = useGarminMatches();
-  const prevWeekRef = useRef(currentWeek);
+  const initializedRef = useRef(false);
+  const prevWeekRef = useRef<number | null>(null);
+  const hydratedRef = useRef(false);
+  const skipNextBonusSaveRef = useRef(false);
+  const skipNextNotesSaveRef = useRef(false);
+
+  // Restore week + validations once on mount
+  useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
+    const week = getSavedCurrentWeek(1);
+    prevWeekRef.current = week;
+    skipNextBonusSaveRef.current = true;
+    skipNextNotesSaveRef.current = true;
+    setCurrentWeek(week);
+    setNotes(getWeekTracking(week));
+    setBonusTracking(getBonusTracking(week));
+    hydratedRef.current = true;
+  }, []);
 
   useEffect(() => {
-    const weekChanged = prevWeekRef.current !== currentWeek;
+    if (!initializedRef.current) return;
+    saveCurrentWeek(currentWeek);
+  }, [currentWeek]);
+
+  // Load when user switches week
+  useEffect(() => {
+    if (!initializedRef.current) return;
+    if (prevWeekRef.current === currentWeek) return;
+
     prevWeekRef.current = currentWeek;
-
-    setNotes((prev) => {
-      const base = weekChanged
-        ? (() => {
-            const saved = localStorage.getItem(
-              `triathlon-notes-week-${currentWeek}`
-            );
-            return saved ? JSON.parse(saved) : {};
-          })()
-        : prev;
-      return applyGarminMatchesToNotes(currentWeek, base, matches);
-    });
-  }, [currentWeek, matches]);
-
-  useEffect(() => {
+    skipNextBonusSaveRef.current = true;
+    skipNextNotesSaveRef.current = true;
+    setNotes(getWeekTracking(currentWeek));
     setBonusTracking(getBonusTracking(currentWeek));
   }, [currentWeek]);
 
+  // Apply Garmin auto-validation after load
   useEffect(() => {
-    if (Object.keys(bonusTracking).length === 0) return;
+    if (!hydratedRef.current || matches.length === 0) return;
+    setNotes((prev) =>
+      applyGarminMatchesToNotes(currentWeek, prev, matches)
+    );
+  }, [currentWeek, matches]);
+
+  useEffect(() => {
+    if (!hydratedRef.current) return;
+    if (skipNextBonusSaveRef.current) {
+      skipNextBonusSaveRef.current = false;
+      return;
+    }
     saveBonusTracking(currentWeek, bonusTracking);
     window.dispatchEvent(new Event("triathlon-tracking-update"));
   }, [bonusTracking, currentWeek]);
 
   const handleBonusToggle = useCallback(
     (trackingId: string, completed: boolean) => {
-      setBonusTracking((prev) => ({
-        ...prev,
-        [trackingId]: completed,
-      }));
+      setBonusTracking((prev) => {
+        const next = { ...prev };
+        if (completed) next[trackingId] = true;
+        else delete next[trackingId];
+        return next;
+      });
     },
     []
   );
 
-  // Persist notes and refresh stats — must not trigger Garmin re-fetch
+  // Persist validations — only after hydration (never overwrite with {})
   useEffect(() => {
-    if (Object.keys(notes).length === 0) return;
-    localStorage.setItem(
-      `triathlon-notes-week-${currentWeek}`,
-      JSON.stringify(notes)
-    );
+    if (!hydratedRef.current) return;
+    if (skipNextNotesSaveRef.current) {
+      skipNextNotesSaveRef.current = false;
+      return;
+    }
+    saveWeekTracking(currentWeek, notes);
     window.dispatchEvent(new Event("triathlon-tracking-update"));
   }, [notes, currentWeek]);
 
@@ -157,6 +194,7 @@ export function TriathlonWeeklyPlan({ data }: TriathlonWeeklyPlanProps) {
 
     return (
       <DayTab
+        key={`${currentWeek}-${tabId}`}
         day={session}
         sessions={[session]}
         schedule={schedule}
@@ -166,7 +204,11 @@ export function TriathlonWeeklyPlan({ data }: TriathlonWeeklyPlanProps) {
         savedNote={saved?.note}
         savedCompleted={saved?.completed ?? Boolean(isGarminMatched(currentWeek, dayIndex))}
         garminMatch={isGarminMatched(currentWeek, dayIndex)}
-        bonusCompleted={bonusTracking}
+        bonusCompleted={filterBonusTrackingForDay(
+          bonusTracking,
+          currentWeek,
+          dayIndex
+        )}
         onBonusToggle={handleBonusToggle}
       />
     );

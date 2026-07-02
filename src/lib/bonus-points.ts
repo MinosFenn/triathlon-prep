@@ -14,32 +14,44 @@ export function bonusPointsForCategory(
 }
 
 export function buildSegmentTrackingId(
+  weekNum: number,
   dayIndex: number,
   slotId: string,
   activityIndex: number,
   segmentIndex: number
 ): string {
-  return `d${dayIndex}-${slotId}-a${activityIndex}-s${segmentIndex}`;
+  return `w${weekNum}-d${dayIndex}-${slotId}-a${activityIndex}-s${segmentIndex}`;
 }
 
 export function buildActivityTrackingId(
+  weekNum: number,
   dayIndex: number,
   slotId: string,
   activityIndex: number
 ): string {
-  return `d${dayIndex}-${slotId}-a${activityIndex}`;
+  return `w${weekNum}-d${dayIndex}-${slotId}-a${activityIndex}`;
+}
+
+/** Only expose completion state for one day (avoids cross-day checkbox bleed). */
+export function filterBonusTrackingForDay(
+  tracking: Record<string, boolean>,
+  weekNum: number,
+  dayIndex: number
+): Record<string, boolean> {
+  const prefix = `w${weekNum}-d${dayIndex}-`;
+  const result: Record<string, boolean> = {};
+  for (const [key, value] of Object.entries(tracking)) {
+    if (key.startsWith(prefix) && value) {
+      result[key] = true;
+    }
+  }
+  return result;
 }
 
 export function countTrackableItems(slots: DayScheduleSlot[]): number {
   let count = 0;
   for (const slot of slots) {
-    for (const activity of slot.activities) {
-      if (activity.segments.length > 0) {
-        count += activity.segments.length;
-      } else {
-        count += 1;
-      }
-    }
+    count += slot.activities.length;
   }
   return count;
 }
@@ -52,21 +64,11 @@ export function computeDayBonusPoints(
   let possible = 0;
 
   for (const slot of slots) {
-    for (let ai = 0; ai < slot.activities.length; ai++) {
-      const activity = slot.activities[ai];
+    for (const activity of slot.activities) {
       const pts = bonusPointsForCategory(activity.category);
-
-      if (activity.segments.length > 0) {
-        for (let si = 0; si < activity.segments.length; si++) {
-          possible += pts;
-          const id = activity.segmentTrackingIds?.[si];
-          if (id && completed[id]) earned += pts;
-        }
-      } else {
-        possible += pts;
-        if (activity.trackingId && completed[activity.trackingId]) {
-          earned += pts;
-        }
+      possible += pts;
+      if (activity.trackingId && completed[activity.trackingId]) {
+        earned += pts;
       }
     }
   }
