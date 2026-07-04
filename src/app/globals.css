@@ -9,17 +9,17 @@ html {
 }
 
 :root {
-  /* Light mode colors */
+  /* Light mode colors - Enhanced contrast */
   --bg-primary: #ffffff;
   --bg-secondary: #f8fafc;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-tertiary: #94a3b8;
-  --border-primary: rgba(15, 23, 42, 0.1);
-  --border-secondary: rgba(15, 23, 42, 0.06);
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(15, 23, 42, 0.12);
-  --glass-shadow: rgba(0, 0, 0, 0.05);
+  --text-primary: #020617;
+  --text-secondary: #334155;
+  --text-tertiary: #64748b;
+  --border-primary: rgba(15, 23, 42, 0.2);
+  --border-secondary: rgba(15, 23, 42, 0.12);
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(15, 23, 42, 0.15);
+  --glass-shadow: rgba(0, 0, 0, 0.08);
   --accent-primary: #6366f1;
   --accent-cyan: #06b6d4;
   --accent-purple: #a855f7;
@@ -102,10 +102,10 @@ body {
 }
 
 [data-theme="light"] .glass-card {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.9);
   box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    0 4px 24px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 .glass-card-strong {
@@ -123,10 +123,10 @@ body {
 }
 
 [data-theme="light"] .glass-card-strong {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.95);
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
 .glass-card-subtle {
@@ -252,23 +252,25 @@ body {
 
 /* Override hardcoded colors in light mode for better readability */
 [data-theme="light"] .text-white {
-  color: var(--text-primary);
+  color: #020617 !important;
+  font-weight: 600;
 }
 
 [data-theme="light"] .text-slate-200 {
-  color: var(--text-primary);
+  color: #020617 !important;
+  font-weight: 600;
 }
 
 [data-theme="light"] .text-slate-300 {
-  color: var(--text-secondary);
+  color: #1e293b !important;
 }
 
 [data-theme="light"] .text-slate-400 {
-  color: var(--text-secondary);
+  color: #334155 !important;
 }
 
 [data-theme="light"] .text-slate-500 {
-  color: var(--text-tertiary);
+  color: #475569 !important;
 }
 
 [data-theme="light"] .bg-white\/8 {
@@ -285,4 +287,20 @@ body {
 
 [data-theme="light"] .hover\:bg-white\/10:hover {
   background-color: rgba(15, 23, 42, 0.06);
+}
+
+/* Enhanced contrast for times and numbers in light mode */
+[data-theme="light"] .tabular-nums {
+  color: #020617;
+  font-weight: 700;
+}
+
+/* Ensure bold text is extra bold in light mode */
+[data-theme="light"] .font-bold {
+  font-weight: 700;
+  color: #020617;
+}
+
+[data-theme="light"] .font-semibold {
+  font-weight: 600;
 }
