@@ -113,8 +113,8 @@ export function StatsDashboard({ data }: StatsDashboardProps) {
             Projection & complétion par semaine
           </h2>
           <p className="text-xs text-slate-500 mb-4">
-            Volume objectif par sport (montée progressive puis affûtage S11–S13)
-            · remplissage = % complété · bonus +15% si semaine complète
+            Volume objectif par sport + renforcement · remplissage = % complété
+            · bonus +15% si semaine complète
           </p>
 
           <WeeklyProjectionChart
@@ -183,10 +183,13 @@ export function StatsDashboard({ data }: StatsDashboardProps) {
               discipline.
             </li>
             <li>
-              Coche chaque bloc (étirements, mental, compléments, renforcement)
-              sur la journée pour des points bonus (+4 à +6 pts par bloc).
+              Coche chaque bloc (étirements, mental, compléments) sur la journée
+              pour des points bonus (+4 à +6 pts par bloc).
             </li>
-            <li>Coche &laquo; Validée &raquo; sur la séance pour les points sport.</li>
+            <li>
+              Coche &laquo; Validée &raquo; sur les séances sport et renforcement
+              pour les points discipline.
+            </li>
             <li>
               Semaine 100% complétée : bonus +15% des points de la semaine.
             </li>

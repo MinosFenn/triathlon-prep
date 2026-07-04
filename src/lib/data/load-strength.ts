@@ -1,6 +1,21 @@
-import type { StrengthData, StrengthSession } from "@/types";
+import type {
+  StrengthData,
+  StrengthSession,
+  TrainingSession,
+} from "@/types";
 import { readContentFile } from "@/lib/content-path";
 import { extractMarkdownTableRows, extractSection } from "@/lib/parsers/markdown";
+import { computeStrengthPoints } from "@/lib/session-meta";
+
+const DAY_INDEX: Record<string, number> = {
+  Lun: 0,
+  Mar: 1,
+  Mer: 2,
+  Jeu: 3,
+  Ven: 4,
+  Sam: 5,
+  Dim: 6,
+};
 
 function extractWeeklyStrengthPlan(
   content: string
@@ -34,6 +49,11 @@ function extractProgression(content: string): {
   };
 }
 
+function parseDurationMin(duration: string): number {
+  const min = duration.match(/(\d+)\s*min/i);
+  return min ? parseInt(min[1], 10) : 25;
+}
+
 function buildSession(
   day: string,
   template: { type: string; duration: string; focus: string } | undefined,
@@ -43,49 +63,117 @@ function buildSession(
   const exercises = isLegs
     ? `Squats, fentes, mollets excentriques (focus mollet droit), planche — ${reps}`
     : `Pompes, tractions, superman, gainage latéral — ${reps}`;
+  const duration = template?.duration ?? "25 min";
+  const estimatedMinutes = parseDurationMin(duration);
 
   return {
     day,
     type: template?.type ?? (isLegs ? "Jambes + Gainage" : "Haut du corps + Gainage"),
-    duration: template?.duration ?? "25 min",
+    duration,
     exercises,
+    estimatedMinutes,
+    points: computeStrengthPoints(estimatedMinutes),
   };
 }
 
-function getDescription(weekNum: number, progression: ReturnType<typeof extractProgression>): string {
+function getDescription(
+  weekNum: number,
+  progression: ReturnType<typeof extractProgression>
+): string {
   if (weekNum <= 4) return `Semaines 1–4: ${progression.phase1}`;
   if (weekNum <= 8) return `Semaines 5–8: ${progression.phase2}`;
   return `Semaines 9–12: ${progression.phase3}`;
 }
 
+/** Brick, tests FTP/chrono et race day : pas de renfo ce jour-là. */
+export function isHeavyTrainingDay(session: TrainingSession): boolean {
+  if (session.disciplineKey === "recovery" || session.disciplineKey === "brick") {
+    return true;
+  }
+  if (/brick/i.test(session.discipline)) return true;
+
+  const type = session.type.toLowerCase();
+  if (/test|ftp|race day|race\s*day/.test(type)) return true;
+  if (session.notes?.startsWith("TEST:")) return true;
+
+  return false;
+}
+
+/** Score bas = journée légère, idéale pour le renfo le soir. */
+function sessionLoadScore(session: TrainingSession): number {
+  let score = session.estimatedMinutes;
+
+  const zone = session.zone.toLowerCase();
+  if (/z4|z5|race|4-5|3-4|2-4/.test(zone)) score += 50;
+  else if (/z3|2-3|3-4/.test(zone)) score += 25;
+  else if (/z1|1-2/.test(zone)) score -= 10;
+
+  if (session.disciplineKey === "swim") score -= 8;
+
+  return score;
+}
+
+function daysApart(a: string, b: string): number {
+  return Math.abs((DAY_INDEX[a] ?? 0) - (DAY_INDEX[b] ?? 0));
+}
+
+/** Choisit 2 jours les plus légers, espacés d'au moins 2 jours. */
+export function pickStrengthDays(
+  sessions: TrainingSession[]
+): [string, string] {
+  const ranked = sessions
+    .filter((s) => s.disciplineKey !== "recovery" && !isHeavyTrainingDay(s))
+    .map((s) => ({ day: s.dayShort, score: sessionLoadScore(s) }))
+    .sort((a, b) => a.score - b.score);
+
+  const fallback: [string, string] = ["Mar", "Ven"];
+  if (ranked.length === 0) return fallback;
+  if (ranked.length === 1) return [ranked[0].day, ranked[0].day];
+
+  const first = ranked[0].day;
+  const spaced =
+    ranked.find((r, i) => i > 0 && daysApart(r.day, first) >= 2) ??
+    ranked[1];
+
+  return [first, spaced.day];
+}
+
 function getSessionsForWeek(
   weekNum: number,
-  weeklyPlan: ReturnType<typeof extractWeeklyStrengthPlan>
+  weeklyPlan: ReturnType<typeof extractWeeklyStrengthPlan>,
+  weekSessions: TrainingSession[]
 ): StrengthSession[] {
   const reps = weekNum <= 4 ? "3×12" : weekNum <= 8 ? "4×12" : "4×10";
-  const isOdd = weekNum % 2 === 1;
 
   const legs = weeklyPlan.find((s) => s.type.includes("Jambes"));
   const upper = weeklyPlan.find((s) => s.type.includes("Haut"));
 
-  if (isOdd) {
-    return [buildSession("Mar", legs, reps), buildSession("Ven", upper, reps)];
-  }
-  return [buildSession("Lun", legs, reps), buildSession("Jeu", upper, reps)];
+  const [legsDay, upperDay] = pickStrengthDays(weekSessions);
+
+  return [
+    buildSession(legsDay, legs, reps),
+    buildSession(upperDay, upper, reps),
+  ];
 }
 
-export function loadStrengthData(): StrengthData {
+export function loadStrengthData(
+  sessionsByWeek: Record<number, TrainingSession[]>
+): StrengthData {
   const content = readContentFile("strength.md");
   const weeklyPlan = extractWeeklyStrengthPlan(content);
   const progression = extractProgression(content);
 
   const descriptionsByWeek: Record<number, string> = {};
-  const sessionsByWeek: Record<number, StrengthSession[]> = {};
+  const sessionsByWeekOut: Record<number, StrengthSession[]> = {};
 
   for (let w = 1; w <= 13; w++) {
     descriptionsByWeek[w] = getDescription(w, progression);
-    sessionsByWeek[w] = getSessionsForWeek(w, weeklyPlan);
+    sessionsByWeekOut[w] = getSessionsForWeek(
+      w,
+      weeklyPlan,
+      sessionsByWeek[w] ?? []
+    );
   }
 
-  return { descriptionsByWeek, sessionsByWeek };
+  return { descriptionsByWeek, sessionsByWeek: sessionsByWeekOut };
 }

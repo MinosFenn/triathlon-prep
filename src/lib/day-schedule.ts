@@ -71,6 +71,16 @@ function getStrengthForDay(
   return strength.sessionsByWeek[weekNum]?.find((s) => s.day === dayShort);
 }
 
+export { getStrengthForDay };
+
+export function buildStrengthDayActivity(
+  session: StrengthSession,
+  weekNum: number,
+  dayIndex: number
+): DayActivity {
+  return strengthActivity(session, weekNum, dayIndex, "renforcement", 0);
+}
+
 function matchesDay(planDay: string, session: TrainingSession): boolean {
   const normalized = planDay.toLowerCase().replace(/\s+/g, "");
   const full = session.day.toLowerCase();

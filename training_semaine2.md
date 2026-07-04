@@ -1,9 +1,9 @@
-| Jour | Discipline | Séance | Détails | Allure/Zone | Matériel |
-| --- | --- | --- | --- | --- | --- |
-| Lundi | Vélo | Endurance + Hill Repeats | 30 km avec 400m D+ : 4x5min en côte (6% grade) à Zone 4, récup 3min. | Zone 2–4 | Garmin Edge, bidon |
-| Mardi | Course | Intervals | 6x400m à 4:30/km (90% effort), récup 200m marche. | Zone 4 | Piste du Bout du Monde |
-| Mercredi | Natation | Technique (Pull Buoy) | 1,800m : 200m échauffement + 6x200m avec pull buoy à 1:55/100m, récup 30s. | Zone 3 | Pull buoy, plaquettes |
-| Jeudi | Vélo | TT Simulation | 25 km plat à allure race (27–30 km/h, Zone 3). | Zone 3 | Garmin Edge, casque aéro |
-| Vendredi | Natation | Vitesse en Eau Libre | 1,200m : 5x200m à 1:45/100m (récup 1min) + 200m cool-down. | Zone 4 | Combinaison |
-| Samedi | Vélo + Brick | Longue Sortie | 50 km avec 600m D+ (Zone 2–3) + 6 km course à 5:15/km. | Zone 2–3 | 2 bidons, 2 gels |
-| Dimanche | Récupération | Marche + Étirements | 45 min marche légère + étirements dynamiques. | - | - |
+| Jour | Discipline | Séance | Lieu | Détails | Allure/Zone | Matériel |
+| --- | --- | --- | --- | --- | --- | --- |
+| Lundi | Vélo | Endurance + Hill Repeats | Plaine 44 km (400 D+) · départ Maison | 40 km, 400 m D+ : 4×5 min en côte (6 %), récup 3 min. | Zone 2–4 | Garmin Edge, bidon |
+| Mardi | Course | Intervals | Piste Bout-du-Monde | 8 km : 2 km éch. + 6×400 m à 4:30/km (récup 200 m marche) + 1,6 km retour. | Zone 4 | Montre Garmin |
+| Mercredi | Natation | Technique (Pull Buoy) | Piscine Lancy · depuis JTI | 1 800 m : 200 m éch. + 6×200 m pull buoy à 1:55/100 m (récup 30 s). | Zone 3 | Pull buoy, plaquettes |
+| Jeudi | Vélo | Allure Race sur plat | Plaine 44 km · départ Maison | 40 km : plat à allure race (27–30 km/h). | Zone 3 | Garmin Edge, casque aéro |
+| Vendredi | Natation | Vitesse Eau Libre | Quai Wilson · depuis JTI | 1 500 m : 5×200 m à 1:45/100 m (récup 1 min) + 500 m cool-down. | Zone 4 | Combinaison |
+| Samedi | Récupération | Marche + Étirements | Bord du lac 8 km | 45 min : marche légère + étirements dynamiques. | - | - |
+| Dimanche | Vélo + Brick | Longue Sortie | Plaine 50 km (500 D+) + Rhône | 44 km vélo + 8 km course : 400 m D+ en Z2–3, puis 8 km à 5:15/km. | Zone 2–3 | 2 bidons, 2 gels |

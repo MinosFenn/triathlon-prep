@@ -1,0 +1,34 @@
+{
+  "bases": [
+    {
+      "id": "home",
+      "type": "home",
+      "name": "Maison",
+      "address": "93 boulevard Carl-Vogt, 1205 Genève",
+      "lat": 46.1986,
+      "lon": 6.1345,
+      "weekdays": ["lun", "jeu"],
+      "notes": "Point de départ principal — Jonction, proche Arve et Vernets."
+    },
+    {
+      "id": "work-spaces-belair",
+      "type": "work",
+      "name": "Spaces Bel-Air",
+      "address": "1 rue de la Cité, 1204 Genève",
+      "lat": 46.2036,
+      "lon": 6.1439,
+      "weekdays": ["mar"],
+      "notes": "Coworking Bel-Air, centre-ville."
+    },
+    {
+      "id": "work-jti",
+      "type": "work_client",
+      "name": "JTI Genève",
+      "address": "8 rue Kazem-Radjavi, 1202 Genève",
+      "lat": 46.2219,
+      "lon": 6.1459,
+      "weekdays": ["mer", "ven"],
+      "notes": "Client JTI — Secheron, nord de la ville."
+    }
+  ]
+}

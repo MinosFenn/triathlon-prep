@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import type { TrainingSession } from "@/types";
 import { getDisciplineStyle } from "@/lib/discipline";
 import { formatDuration } from "@/lib/session-meta";
+import { isTestSession } from "@/lib/session-test";
+import { TestStar } from "./TestStar";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { SportIcon } from "./SportIcon";
 import { ZoneBadge } from "./ZoneBadge";
@@ -27,7 +29,7 @@ export function SessionCard({
   garminMatch,
 }: SessionCardProps) {
   const style = getDisciplineStyle(session.disciplineKey);
-  const isTest = session.notes?.startsWith("TEST:");
+  const isTest = isTestSession(session);
   const [note, setNote] = useState(
     initialNote || (isTest ? "" : session.notes || "")
   );
@@ -53,8 +55,9 @@ export function SessionCard({
             <p className={`text-xs font-semibold uppercase tracking-wider ${style.color}`}>
               {session.discipline}
             </p>
-            <h4 className="font-semibold text-white text-lg leading-tight">
+            <h4 className="font-semibold text-white text-lg leading-tight flex items-center gap-1.5">
               {session.type}
+              {isTest && <TestStar />}
             </h4>
           </div>
         </div>
@@ -77,6 +80,13 @@ export function SessionCard({
             segments={session.segments}
             title="Structure de la séance"
           />
+        </div>
+      )}
+
+      {session.location && (
+        <div className="text-sm text-slate-400 mb-4 flex items-start gap-2">
+          <span className="text-slate-500 shrink-0 font-medium">Lieu</span>
+          <span>{session.location}</span>
         </div>
       )}
 

@@ -1,0 +1,53 @@
+{
+  "venues": [
+    {
+      "id": "pool-vernets",
+      "discipline": "swim",
+      "type": "pool",
+      "name": "Piscine des Vernets",
+      "address": "Rue Hans-Wilsdorf 4, 1227 Les Acacias",
+      "lat": 46.1899,
+      "lon": 6.1165,
+      "facilities": ["50 m", "couloirs", "plongeon", "pataugeoire"],
+      "bestFor": ["endurance", "technique", "intervalles"],
+      "notes": "La plus proche du domicile (~10 min vélo). Bassin 50 m."
+    },
+    {
+      "id": "pool-lancy",
+      "discipline": "swim",
+      "type": "pool",
+      "name": "Piscine de Lancy (Marignac)",
+      "address": "Avenue Eugène-Lance 30, 1212 Grand-Lancy",
+      "lat": 46.1795,
+      "lon": 6.1233,
+      "facilities": ["25 m", "couloirs"],
+      "bestFor": ["endurance", "technique"],
+      "notes": "Tram 15 — arrêt Piscine de Lancy."
+    },
+    {
+      "id": "open-water-wilson",
+      "discipline": "swim",
+      "type": "open_water",
+      "name": "Quai Wilson (eau libre)",
+      "address": "Quai Wilson 45, 1201 Genève",
+      "lat": 46.2129,
+      "lon": 6.1529,
+      "facilities": ["rampe d'accès", "zone balisée", "casiers été"],
+      "season": "avril-octobre",
+      "bestFor": ["eau libre", "triathlon", "simulation course"],
+      "notes": "Rendez-vous jetée face à l'intersection rue Jean-Antoine Gautier. Non surveillé."
+    },
+    {
+      "id": "track-bout-du-monde",
+      "discipline": "run",
+      "type": "track",
+      "name": "Piste d'athlétisme — Bout-du-Monde",
+      "address": "Route de Vessy 12, 1206 Genève",
+      "lat": 46.1842,
+      "lon": 6.1588,
+      "facilities": ["piste 400 m", "stade"],
+      "bestFor": ["intervalles", "VMA", "technique"],
+      "notes": "Centre sportif municipal. Bus 7 / 11 — arrêt Bout-du-Monde."
+    }
+  ]
+}

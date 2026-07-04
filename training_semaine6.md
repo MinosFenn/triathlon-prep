@@ -1,9 +1,9 @@
-| Jour | Discipline | Séance | Détails | Allure/Zone | Matériel |
-| --- | --- | --- | --- | --- | --- |
-| Lundi | Vélo | TT Simulation | 30 km plat à allure race (28–30 km/h, Zone 3–4). | Zone 3–4 | Garmin Edge, casque aéro |
-| Mardi | Course | Intervals | 8x800m à 4:30/km (récup 400m marche). | Zone 4 | Piste du Bout du Monde |
-| Mercredi | Natation | Technique (Pull Buoy + Plaquettes) | 1,800m : 400m échauffement + 8x100m pull buoy + plaquettes à 1:45/100m, récup 20s. | Zone 3 | Pull buoy, plaquettes |
-| Jeudi | Vélo | Endurance + Hill Repeats | 40 km avec 600m D+ : 4x8min en côte (5% grade) à Zone 3–4, récup 4min. | Zone 3–4 | Garmin Edge |
-| Vendredi | Natation | Endurance en Eau Libre | 1,500m : 1,000m continu à 1:55/100m + 5x100m sprint. | Zone 2–3 | Combinaison |
-| Samedi | Vélo + Brick | Race Simulation | 40 km avec 800m D+ à allure race (27–30 km/h) + 8 km course à 4:50/km. | Zone 3 | 2 bidons, 2 gels, chrono |
-| Dimanche | Récupération | Yoga + Étirements | 30 min yoga (focus hanches) + 10 min étirements. | - | Tapis de yoga |
+| Jour | Discipline | Séance | Lieu | Détails | Allure/Zone | Matériel |
+| --- | --- | --- | --- | --- | --- | --- |
+| Lundi | Vélo | Endurance Légère | Plaine 44 km · départ Maison | 40 km : Z2 + 2×5 min côtes modérées (récup 3 min). | Zone 2–3 | Garmin Edge |
+| Mardi | Course | Intervals Courts | Piste Bout-du-Monde | 8 km : 2 km éch. + 6×400 m à 4:35/km (récup 200 m marche) + 1,6 km retour. | Zone 4 | Montre Garmin |
+| Mercredi | Natation | Technique | Piscine Vernets · départ Maison | 1 500 m : 300 m éch. + 6×150 m pull buoy (récup 25 s) + 300 m cool-down. | Zone 2–3 | Pull buoy |
+| Jeudi | Vélo | Endurance | Plaine 44 km · départ Maison | 40 km : plat Z2 (20–22 km/h). | Zone 2 | Garmin Edge |
+| Vendredi | Natation | Eau Libre Modérée | Quai Wilson · depuis JTI | 1 500 m : 1 000 m continu + 5×100 m accélérations. | Zone 2–3 | Combinaison |
+| Samedi | Récupération | Marche + Respiration | Bord du lac 8 km | 45 min : marche + 5 min respiration 4-7-8. | - | - |
+| Dimanche | Vélo + Brick | Sortie Modérée | Plaine 44 km + lac | 40 km vélo + 8 km course : Z2, puis 8 km à 5:15/km. | Zone 2–3 | 2 bidons, 1 gel |

@@ -1,0 +1,88 @@
+{
+  "routes": [
+    {
+      "id": "bike-plaine-44",
+      "discipline": "bike",
+      "name": "Plaine genevoise — 44 km / 400 m D+",
+      "distanceKm": 44,
+      "elevationGainM": 400,
+      "profile": "rolling",
+      "startBaseId": "home",
+      "waypoints": [
+        { "name": "Plan-les-Ouattes", "lat": 46.1669, "lon": 6.1084, "role": "via" },
+        { "name": "Avusy", "lat": 46.3378, "lon": 6.0256, "role": "via" },
+        { "name": "Chancy", "lat": 46.1497, "lon": 5.9668, "role": "via" },
+        { "name": "Russin", "lat": 46.1472, "lon": 6.0478, "role": "via" },
+        { "name": "Aire-la-Ville", "lat": 46.1904, "lon": 6.0437, "role": "via" }
+      ],
+      "bestFor": ["endurance", "Z2", "sortie modérée"],
+      "notes": "Boucle campagne genevoise sans gros cols. Bonne sortie du mardi depuis Bel-Air ou de la maison."
+    },
+    {
+      "id": "bike-plaine-50",
+      "discipline": "bike",
+      "name": "Plaine + St-Genis — 50 km / 500 m D+",
+      "distanceKm": 50,
+      "elevationGainM": 500,
+      "profile": "rolling",
+      "startBaseId": "home",
+      "waypoints": [
+        { "name": "Plan-les-Ouattes", "lat": 46.1669, "lon": 6.1084, "role": "via" },
+        { "name": "Avusy", "lat": 46.3378, "lon": 6.0256, "role": "via" },
+        { "name": "Chancy", "lat": 46.1497, "lon": 5.9668, "role": "via" },
+        { "name": "Saint-Genis-Pouilly", "lat": 46.2433, "lon": 6.0778, "role": "via" },
+        { "name": "Genève centre", "lat": 46.2044, "lon": 6.1432, "role": "end" }
+      ],
+      "bestFor": ["endurance", "sortie longue Z2"],
+      "notes": "Variante plus longue avec passage France (St-Genis) et retour Genève."
+    },
+    {
+      "id": "bike-saleve-python",
+      "discipline": "bike",
+      "name": "Salève par Python — descente Monnetier",
+      "distanceKm": 38,
+      "elevationGainM": 900,
+      "profile": "mountain",
+      "startBaseId": "home",
+      "reverseAllowed": true,
+      "waypoints": [
+        { "name": "Veyrier / Mont-Sion", "lat": 46.1685, "lon": 6.1780, "role": "via" },
+        { "name": "Route du Python (Salève)", "lat": 46.1658, "lon": 6.1897, "role": "via" },
+        { "name": "Monnetier-Mornex", "lat": 46.1747, "lon": 6.2233, "role": "via" }
+      ],
+      "bestFor": ["D+", "force", "sortie montagne"],
+      "notes": "Montée Salève côté Python, descente Monnetier. Sens inverse possible (pente plus douce à la montée)."
+    },
+    {
+      "id": "bike-monnetier-cruseilles",
+      "discipline": "bike",
+      "name": "Monnetier — Cruseilles",
+      "distanceKm": 70,
+      "elevationGainM": 1100,
+      "profile": "mountain",
+      "startBaseId": "home",
+      "waypoints": [
+        { "name": "Monnetier-Mornex", "lat": 46.1747, "lon": 6.2233, "role": "via" },
+        { "name": "Cruseilles", "lat": 46.0672, "lon": 6.1078, "role": "via" }
+      ],
+      "bestFor": ["sortie longue", "D+", "week-end"],
+      "notes": "Grande sortie montagne. Prévoir matinée entière."
+    },
+    {
+      "id": "bike-tour-vuache",
+      "discipline": "bike",
+      "name": "Tour du Vuache",
+      "distanceKm": 75,
+      "elevationGainM": 700,
+      "profile": "rolling",
+      "startBaseId": "home",
+      "waypoints": [
+        { "name": "Chancy", "lat": 46.1497, "lon": 5.9668, "role": "via" },
+        { "name": "Col du Grand Voire (Vuache)", "lat": 46.128, "lon": 5.912, "role": "via" },
+        { "name": "Chevrier", "lat": 46.095, "lon": 5.965, "role": "via" }
+      ],
+      "bestFor": ["endurance", "sortie longue", "week-end"],
+      "notes": "Boucle autour du massif du Vuache (Haute-Savoie / Ain). Profil vallonné."
+    }
+  ]
+}

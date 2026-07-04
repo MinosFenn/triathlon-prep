@@ -1,9 +1,9 @@
-| Jour | Discipline | Séance | Détails | Allure/Zone | Matériel |
-| --- | --- | --- | --- | --- | --- |
-| Lundi | Vélo | Endurance | 40 km plat à Zone 2 (22–24 km/h). | Zone 2 | Garmin Edge |
-| Mardi | Course | Tempo | 10 km : 4x8min à 4:40/km (Zone 3), récup 2min. | Zone 3 | Montre Garmin |
-| Mercredi | Natation | Vitesse | 1,000m : 20x50m à 1:30/100m (récup 15s). | Zone 5 | Plaquettes |
-| Jeudi | Vélo | TT Simulation | 25 km à allure race (28–30 km/h, Zone 3–4). | Zone 3–4 | Garmin Edge, casque aéro |
-| Vendredi | Natation | Endurance | 1,500m continu à 1:55/100m. | Zone 2 | - |
-| Samedi | Vélo + Brick | Test : 50 km + 1,000m D+ | 50 km avec 1,000m D+ à Zone 2–3 + 8 km course à 4:50/km. | Zone 2–3 | 3 bidons, 3 gels |
-| Dimanche | Récupération | Étirements + Visualisation | 10 min étirements + 5 min visualisation (imaginer la transition vélo → course). | - | - |
+| Jour | Discipline | Séance | Lieu | Détails | Allure/Zone | Matériel |
+| --- | --- | --- | --- | --- | --- | --- |
+| Lundi | Vélo + Brick | Test : 50 km + 1 000 m D+ | Monnetier → Cruseilles (partie) | 50 km vélo + 8 km course : 1 000 m D+ en Z2–3, puis 8 km à 4:50/km. Dernière grosse sortie. | Zone 2–3 | 3 bidons, 3 gels |
+| Mardi | Course | Endurance Progressive | Bord du lac 8 km · plat | 8 km : à 5:15–5:30/km. | Zone 2–3 | Montre Garmin |
+| Mercredi | Natation | Vitesse Modérée | Piscine Vernets · départ Maison | 1 500 m : 12×50 m à 1:35/100 m (récup 20 s) + 900 m cool-down. | Zone 3–4 | Plaquettes |
+| Jeudi | Vélo | Seuil Home-trainer | Maison · home-trainer | 40 km (équivalent) : éch. 10 min Z2 + 3×8 min à 95 % FTP (récup 4 min). | Zone 4 | Home-trainer, capteur puissance |
+| Vendredi | Natation | Pré-mariage | Piscine Lancy · depuis JTI | 1 500 m : 800 m technique facile + 700 m cool-down. | Zone 1–2 | Pull buoy |
+| Samedi | Récupération | Mariage | - | Pas d'entraînement — mariage 22/08. | - | - |
+| Dimanche | Récupération | Repos post-mariage | - | Marche légère ou repos complet. Hydratation et sommeil. | - | - |

@@ -1,0 +1,62 @@
+{
+  "routes": [
+    {
+      "id": "run-lac-plat-8",
+      "discipline": "run",
+      "name": "Bord du lac — plat 8 km",
+      "distanceKm": 8,
+      "distanceRangeKm": [7.5, 8.5],
+      "elevationGainM": 20,
+      "profile": "flat",
+      "surface": "asphalte",
+      "startBaseId": "home",
+      "waypoints": [
+        { "name": "Départ Carl-Vogt", "lat": 46.1986, "lon": 6.1345, "role": "start" },
+        { "name": "Jonction", "lat": 46.2012, "lon": 6.1385, "role": "via" },
+        { "name": "Paquis / bord du lac", "lat": 46.2105, "lon": 6.1505, "role": "via" },
+        { "name": "Retour Carl-Vogt", "lat": 46.1986, "lon": 6.1345, "role": "end" }
+      ],
+      "bestFor": ["endurance", "récupération", "Z2"],
+      "notes": "Parcours plat le long du Rhône puis du lac. Idéal footing facile."
+    },
+    {
+      "id": "run-rhone-valonne",
+      "discipline": "run",
+      "name": "Bord du Rhône — vallonné",
+      "distanceKm": 14,
+      "distanceRangeKm": [8, 21],
+      "elevationGainM": 150,
+      "elevationRangeM": [100, 200],
+      "profile": "rolling",
+      "surface": "asphalte",
+      "startBaseId": "home",
+      "waypoints": [
+        { "name": "Départ Carl-Vogt", "lat": 46.1986, "lon": 6.1345, "role": "start" },
+        { "name": "Jonction — bord Rhône", "lat": 46.2015, "lon": 6.1390, "role": "via" },
+        { "name": "Chancy (option longue)", "lat": 46.1497, "lon": 5.9668, "role": "via" },
+        { "name": "Retour Carl-Vogt", "lat": 46.1986, "lon": 6.1345, "role": "end" }
+      ],
+      "bestFor": ["endurance", "tempo", "sortie longue"],
+      "notes": "8 à 21 km selon la boucle. 100–200 m D+ via les côtes du Rhône côté rive gauche."
+    },
+    {
+      "id": "run-arve-12",
+      "discipline": "run",
+      "name": "Bord de l'Arve — 12 km",
+      "distanceKm": 12,
+      "distanceRangeKm": [11, 13],
+      "elevationGainM": 100,
+      "profile": "rolling",
+      "surface": "chemin / asphalte",
+      "startBaseId": "home",
+      "waypoints": [
+        { "name": "Départ Carl-Vogt", "lat": 46.1986, "lon": 6.1345, "role": "start" },
+        { "name": "Arve — Plainpalais", "lat": 46.1988, "lon": 6.1280, "role": "via" },
+        { "name": "Carouge / Vessy (aller)", "lat": 46.1845, "lon": 6.1420, "role": "via" },
+        { "name": "Retour Carl-Vogt", "lat": 46.1986, "lon": 6.1345, "role": "end" }
+      ],
+      "bestFor": ["endurance", "sortie modérée"],
+      "notes": "Boucle le long de l'Arve. ~100 m D+, départ direct depuis le domicile."
+    }
+  ]
+}

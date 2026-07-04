@@ -65,6 +65,7 @@ export function computeDayBonusPoints(
 
   for (const slot of slots) {
     for (const activity of slot.activities) {
+      if (activity.category === "strength") continue;
       const pts = bonusPointsForCategory(activity.category);
       possible += pts;
       if (activity.trackingId && completed[activity.trackingId]) {

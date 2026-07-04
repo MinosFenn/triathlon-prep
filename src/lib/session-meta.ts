@@ -30,6 +30,7 @@ const POINTS_PER_MIN: Record<DisciplineKey, number> = {
   bike: 2,
   run: 2.2,
   brick: 2.6,
+  strength: 2,
   recovery: 0.7,
 };
 
@@ -59,6 +60,14 @@ function parseSessionStructure(
 ): { segments: SessionSegment[]; estimatedMinutes: number } {
   const text = details.trim();
 
+  if (/race\s*day/i.test(type)) {
+    const raceMin = 165;
+    return {
+      segments: [{ label: type, description: text, durationMin: raceMin }],
+      estimatedMinutes: raceMin,
+    };
+  }
+
   if (disciplineKey === "recovery") {
     return parseRecoverySession(type, text);
   }
@@ -67,15 +76,27 @@ function parseSessionStructure(
     return parseBrickSession(type, text);
   }
 
-  if (disciplineKey === "swim" || looksLikeSwim(text)) {
+  if (disciplineKey === "swim") {
     return parseSwimSession(type, text);
   }
 
-  if (disciplineKey === "run" || extractRunKm(text) !== null) {
+  if (disciplineKey === "bike") {
+    return parseBikeSession(type, text);
+  }
+
+  if (disciplineKey === "run") {
     return parseRunSession(type, text);
   }
 
-  if (disciplineKey === "bike" || extractBikeKm(text) !== null) {
+  if (looksLikeSwim(text)) {
+    return parseSwimSession(type, text);
+  }
+
+  if (extractRunKm(text) !== null) {
+    return parseRunSession(type, text);
+  }
+
+  if (extractBikeKm(text) !== null) {
     return parseBikeSession(type, text);
   }
 
@@ -87,7 +108,11 @@ function parseSessionStructure(
 }
 
 function isBrickSession(text: string): boolean {
-  return /\+\s*\d+[\d,.]*\s*km\s+course/i.test(text) || /brick/i.test(text);
+  return (
+    /\d[\d,.]*\s*km\s*v[ée]lo\s*\+\s*\d[\d,.]*\s*km\s*course/i.test(text) ||
+    /\+\s*\d+[\d,.]*\s*km\s+course/i.test(text) ||
+    /brick/i.test(text)
+  );
 }
 
 function looksLikeSwim(text: string): boolean {
@@ -103,19 +128,62 @@ function parseRecoverySession(type: string, text: string) {
   };
 }
 
+/** Évite de couper sur le « + » de « D+ » (dénivelé). */
+function splitBrickParts(text: string): string[] {
+  const normalized = text.replace(/(\d)\s*m\s*D\+/gi, "$1mDPLUS");
+  return normalized.split(/\s*\+\s*/).map((p) => p.replace(/mDPLUS/gi, " m D+").trim());
+}
+
 function parseBrickSession(type: string, text: string) {
-  const parts = text.split(/\s*\+\s*/).map((p) => p.trim());
+  const brickMatch = text.match(
+    /^([\d,.]+)\s*km\s*v[ée]lo\s*\+\s*([\d,.]+)\s*km\s*course\s*:?\s*(.*)$/i
+  );
+
+  if (brickMatch) {
+    const bikeKm = parseFloat(brickMatch[1].replace(",", "."));
+    const runKm = parseFloat(brickMatch[2].replace(",", "."));
+    const details = brickMatch[3]?.trim() ?? "";
+    const bikeMin = Math.round(bikeKm * BIKE_MIN_PER_KM);
+    const runMin = Math.round(runKm * parseRunPaceMinPerKm(text));
+    const transitionMin = 5;
+    const runDetail = details.match(/puis\s*(.+)$/i)?.[1]?.trim();
+
+    const segments: SessionSegment[] = [
+      {
+        label: "Vélo",
+        description: `${bikeKm} km vélo${details ? ` — ${details.split(/,\s*puis/i)[0]?.trim() ?? details}` : ""}`,
+        durationMin: bikeMin,
+      },
+      {
+        label: "Transition",
+        description: "T2 — chaussures, nutrition",
+        durationMin: transitionMin,
+      },
+      {
+        label: "Course",
+        description: `${runKm} km course${runDetail ? ` — ${runDetail}` : ""}`,
+        durationMin: runMin,
+      },
+    ];
+
+    return {
+      segments,
+      estimatedMinutes: bikeMin + transitionMin + runMin,
+    };
+  }
+
+  const parts = splitBrickParts(text);
   const segments: SessionSegment[] = [];
   let total = 0;
 
   for (const part of parts) {
     const bikeKm = extractBikeKm(part);
     const runKm = extractRunKm(part);
-    if (bikeKm !== null) {
+    if (bikeKm !== null && /v[ée]lo|bike/i.test(part)) {
       const min = Math.round(bikeKm * BIKE_MIN_PER_KM);
       segments.push({ label: "Vélo", description: part, durationMin: min });
       total += min;
-    } else if (runKm !== null) {
+    } else if (runKm !== null && /course|run/i.test(part)) {
       const min = Math.round(runKm * parseRunPaceMinPerKm(part));
       segments.push({ label: "Course", description: part, durationMin: min });
       total += min;
@@ -307,17 +375,26 @@ function formatIntervalLabel(intervals: { minutes: number; raw: string }): strin
   return `${intervals.minutes} min`;
 }
 
+function parseMeterValue(raw: string): number {
+  return parseFloat(raw.replace(/\s/g, "").replace(",", "."));
+}
+
 function parseSwimIntervals(text: string) {
-  const match = text.match(/(\d+)\s*x\s*(\d+)\s*m/i);
+  const match = text.match(/(\d+)\s*[x×]\s*(\d+)\s*m\b/i);
   if (!match) return null;
   const reps = parseInt(match[1], 10);
   const dist = parseInt(match[2], 10);
   const paceSec = extractSwimPaceSecPer100(text) ?? 110;
-  const recSec = text.match(/récup\s*(\d+)\s*s/i);
-  const rec = recSec ? parseInt(recSec[1], 10) : 20;
+  const recSec = text.match(/r[eé]cup\s*(\d+)\s*s/i);
+  const recMin = text.match(/r[eé]cup\s*(\d+)\s*min/i);
+  const rec = recSec
+    ? parseInt(recSec[1], 10)
+    : recMin
+      ? parseInt(recMin[1], 10) * 60
+      : 20;
   const workMin = ((reps * dist) / 100) * (paceSec / 60);
-  const recMin = (reps * rec) / 60;
-  const totalMin = Math.round(workMin + recMin);
+  const recMinTotal = (reps * rec) / 60;
+  const totalMin = Math.round(workMin + recMinTotal);
   return {
     segments: [
       {
@@ -331,18 +408,21 @@ function parseSwimIntervals(text: string) {
 }
 
 function extractSwimTotalMeters(text: string): number | null {
-  const head = text.match(/^([\d,.]+)\s*m\b/i);
-  if (head) return parseFloat(head[1].replace(",", "."));
-  const continu = text.match(/([\d,.]+)\s*m\s+continu/i);
-  if (continu) return parseFloat(continu[1].replace(",", "."));
+  const head = text.match(/^([\d][\d\s,.]*)\s*m\b/i);
+  if (head) {
+    const val = parseMeterValue(head[1]);
+    if (val > 0) return val;
+  }
+  const continu = text.match(/([\d][\d\s,.]*)\s*m\s+continu/i);
+  if (continu) return parseMeterValue(continu[1]);
   return null;
 }
 
 function extractSwimDistanceMeters(text: string): number | null {
-  const interval = text.match(/(\d+)\s*x\s*(\d+)\s*m/i);
+  const interval = text.match(/(\d+)\s*[x×]\s*(\d+)\s*m\b/i);
   if (interval) return parseInt(interval[1], 10) * parseInt(interval[2], 10);
-  const single = text.match(/([\d,.]+)\s*m\b/i);
-  if (single) return parseFloat(single[1].replace(",", "."));
+  const single = text.match(/(?<!\/)(\d[\d\s,.]*)\s*m\b/i);
+  if (single) return parseMeterValue(single[1]);
   return null;
 }
 
@@ -363,7 +443,7 @@ function inferSwimLabel(part: string, index: number): string {
   if (lower.includes("échauff") || lower.includes("echauff")) return "Échauffement";
   if (lower.includes("cool")) return "Cool-down";
   if (lower.includes("sprint")) return "Sprints";
-  if (/\d+\s*x/i.test(part)) return "Séries";
+  if (/\d+\s*[x×]/i.test(part)) return "Séries";
   return index === 0 ? "Natation" : `Bloc ${index + 1}`;
 }
 
@@ -418,7 +498,8 @@ function scaleSegmentsToTotal(segments: SessionSegment[], totalMin: number) {
 function estimateGenericMinutes(disciplineKey: DisciplineKey, text: string): number {
   const intervals = parseIntervalBlock(text);
   if (intervals) return intervals.minutes;
-  const explicit = text.match(/(\d+)\s*min/i);
+  const withoutRecup = text.replace(/\([^)]*r[eé]cup[^)]*\)/gi, "");
+  const explicit = withoutRecup.match(/(\d+)\s*min/i);
   if (explicit) return parseInt(explicit[1], 10);
   if (disciplineKey === "recovery") return 30;
   return 45;
@@ -457,3 +538,9 @@ export function formatDuration(minutes: number): string {
 }
 
 export const WEEK_COMPLETION_BONUS_RATIO = 0.15;
+
+/** Points renfo : durée × coef discipline (comme le vélo, zone Z2). */
+export function computeStrengthPoints(durationMin: number): number {
+  const raw = durationMin * POINTS_PER_MIN.strength;
+  return Math.max(15, Math.round(raw));
+}

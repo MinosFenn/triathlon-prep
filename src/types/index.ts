@@ -1,6 +1,17 @@
 import type { DailySupplementsByWeek } from "@/lib/supplements-daily";
+export type {
+  BaseLocation,
+  BaseType,
+  LocationsData,
+  RouteProfile,
+  TrainingRoute,
+  Venue,
+  VenueType,
+  Waypoint,
+} from "@/types/locations";
+import type { LocationsData } from "@/types/locations";
 
-export type DisciplineKey = "bike" | "run" | "swim" | "brick" | "recovery";
+export type DisciplineKey = "bike" | "run" | "swim" | "brick" | "strength" | "recovery";
 
 export interface SessionSegment {
   label: string;
@@ -20,6 +31,8 @@ export interface TrainingSession {
   details: string;
   zone: string;
   material: string;
+  /** Lieu / circuit (depuis training_semaine{N}.md) */
+  location: string;
   notes: string;
   segments: SessionSegment[];
   estimatedMinutes: number;
@@ -119,6 +132,8 @@ export interface StrengthSession {
   type: string;
   duration: string;
   exercises: string;
+  estimatedMinutes: number;
+  points: number;
 }
 
 export interface StretchingData {
@@ -175,4 +190,5 @@ export interface AppData {
   mental: MentalData;
   calendar: CalendarEntry[];
   tipsByWeek: Record<number, string[]>;
+  locations: LocationsData;
 }

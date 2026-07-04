@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { AppData, DayTabId, WeekPlan } from "@/types";
 import { getDisciplineStyle } from "@/lib/discipline";
-import { buildDaySchedule } from "@/lib/day-schedule";
+import { buildDaySchedule, getStrengthForDay } from "@/lib/day-schedule";
+import { isTestSession } from "@/lib/session-test";
+import { TestStar } from "@/components/sessions/TestStar";
 import { filterBonusTrackingForDay } from "@/lib/bonus-points";
 import {
   getBonusTracking,
@@ -17,6 +19,7 @@ import {
 import { OverviewTab } from "@/components/overview/OverviewTab";
 import { DayTab } from "@/components/sessions/DayTab";
 import { SportIcon } from "@/components/sessions/SportIcon";
+import { StrengthIcon } from "@/components/sessions/StrengthIcon";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import {
@@ -161,6 +164,7 @@ export function TriathlonWeeklyPlan({ data }: TriathlonWeeklyPlanProps) {
       label: s.dayShort,
       date: s.date,
       sport: s,
+      hasStrength: Boolean(getStrengthForDay(strength, currentWeek, s.dayShort)),
     })),
   ];
 
@@ -192,6 +196,9 @@ export function TriathlonWeeklyPlan({ data }: TriathlonWeeklyPlanProps) {
       dailySupplements,
       dayIndex
     );
+    const strengthSlot = schedule.find((s) => s.id === "renforcement");
+    const strengthActivity = strengthSlot?.activities[0];
+    const strengthSession = getStrengthForDay(strength, currentWeek, session.dayShort);
 
     return (
       <DayTab
@@ -199,6 +206,8 @@ export function TriathlonWeeklyPlan({ data }: TriathlonWeeklyPlanProps) {
         day={session}
         sessions={[session]}
         schedule={schedule}
+        strengthSession={strengthSession}
+        strengthActivity={strengthActivity}
         onNoteChange={(note, completed) =>
           handleNoteChange(dayIndex, note, completed)
         }
@@ -287,28 +296,44 @@ export function TriathlonWeeklyPlan({ data }: TriathlonWeeklyPlanProps) {
                   ) : (
                     <>
                       <span
-                        className={`text-xs font-bold ${isActive ? "text-white" : "text-slate-400"}`}
+                        className={`text-xs font-bold inline-flex items-center gap-0.5 ${isActive ? "text-white" : "text-slate-400"}`}
                       >
                         {tab.label}
+                        {tab.sport && isTestSession(tab.sport) && (
+                          <TestStar className="text-[9px]" />
+                        )}
                       </span>
                       <span className="text-[10px] text-slate-500 tabular-nums">
                         {tab.date}
                       </span>
                       {tab.sport && sportStyle && (
                         <div className="flex flex-col items-center gap-0.5">
-                          <div
-                            className={`mt-1.5 flex items-center gap-0.5 px-1.5 py-0.5 rounded-md border ${sportStyle.bg} ${sportStyle.border}`}
-                            title={tab.sport.discipline}
-                          >
-                            <SportIcon
-                              disciplineKey={tab.sport.disciplineKey}
-                              className="w-3 h-3"
-                            />
-                            <span
-                              className={`text-[9px] font-semibold ${sportStyle.color}`}
+                          <div className="flex flex-col items-center gap-0.5 mt-1.5">
+                            <div
+                              className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded-md border ${sportStyle.bg} ${sportStyle.border}`}
+                              title={tab.sport.discipline}
                             >
-                              {sportStyle.shortLabel}
-                            </span>
+                              <SportIcon
+                                disciplineKey={tab.sport.disciplineKey}
+                                className="w-3 h-3"
+                              />
+                              <span
+                                className={`text-[9px] font-semibold ${sportStyle.color}`}
+                              >
+                                {sportStyle.shortLabel}
+                              </span>
+                            </div>
+                            {"hasStrength" in tab && tab.hasStrength ? (
+                              <div
+                                className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md border bg-rose-500/20 border-rose-400/30"
+                                title="Renforcement musculaire"
+                              >
+                                <StrengthIcon className="w-3 h-3" />
+                                <span className="text-[9px] font-semibold text-rose-300">
+                                  Renfo
+                                </span>
+                              </div>
+                            ) : null}
                           </div>
                           {notes[`day-${DAY_TAB_IDS.indexOf(tab.id) - 1}`]
                             ?.completed && (

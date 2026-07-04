@@ -9,189 +9,195 @@
           "contraint": ["mercredi", "vendredi"]
         },
         "evenements": [
-          {"date": "21-23/08/2026", "type": "mariage", "adaptation": "volume -50%"},
-          {"date": "24-30/08/2026", "type": "vacances", "adaptation": "1-2 séances/jour"},
-          {"date": "14/09/2026", "type": "Jeûne Genevois", "adaptation": "longue sortie vélo + brick"},
+          {"date": "22/08/2026", "type": "mariage", "adaptation": "pas de séance samedi — volume réduit lun–ven"},
+          {"date": "24-30/08/2026", "type": "vacances", "adaptation": "1-2 séances/jour légères"},
+          {"date": "14/09/2026", "type": "Jeûne Genevois", "adaptation": "séances courtes, hydratation"},
           {"date": "27/09/2026", "type": "race_day", "adaptation": "taper final"}
         ]
+      },
+      "progression": {
+        "modele": "Montée tous les 2 blocs + semaine récup tous les 3 semaines jusqu'à S12",
+        "pic_volume": "S8 (avant mariage)",
+        "taper": "S11 (−30 %), S12 (−50 %, course 27/09 dans 7 j), S13 race week → dimanche 27/09"
       },
       "semaines": [
         {
           "num": 1,
           "date_debut": "29/06/2026",
           "date_fin": "05/07/2026",
-          "objectif": "Base endurance + adaptation vélo",
+          "objectif": "Base endurance — circuits plaine et lac",
           "volume": {
-            "natation": "2 séances (1.5K + 1.5K)",
-            "velo": "3 séances (25K + 30K + 45K)",
-            "course": "2 séances (8K + 6x400m)",
-            "brick": "1 (45K vélo + 5K course)"
+            "natation": "2×1.5K (mer, ven)",
+            "velo": "3 séances (40K + HT 40K eq + 40K brick dim)",
+            "course": "2×8K (mar + brick dim)",
+            "brick": "1 dim (40K vélo + 8K course)"
           },
-          "focus": ["Hill repeats (3x5min)", "Technique natation", "Endurance fondamentale"]
+          "focus": ["Plaine 44 km", "Piscine Lancy / Wilson", "Récup samedi"]
         },
         {
           "num": 2,
           "date_debut": "06/07/2026",
           "date_fin": "12/07/2026",
-          "objectif": "Augmenter volume vélo + hill repeats",
+          "objectif": "Montée volume — +20 % vs S1",
           "volume": {
-            "natation": "2 séances (1.8K + 1.2K)",
-            "velo": "3 séances (30K + 25K + 50K)",
-            "course": "2 séances (10K tempo + 6x400m)",
-            "brick": "1 (50K vélo + 6K course)"
+            "natation": "2×1.5K+ (1.8K + 1.5K)",
+            "velo": "3 séances (40K + 40K + 44K brick dim)",
+            "course": "2×8K (intervalles + brick dim)",
+            "brick": "1 dim (44K vélo + 8K course)"
           },
-          "focus": ["Hill repeats (4x5min)", "Vitesse natation", "Brick workout"]
+          "focus": ["Plaine 50 km", "Piste Bout-du-Monde", "Récup samedi"]
         },
         {
           "num": 3,
           "date_debut": "13/07/2026",
           "date_fin": "19/07/2026",
-          "objectif": "Intensité vélo + endurance course",
+          "objectif": "Semaine récupération (−25 % vs S2)",
           "volume": {
-            "natation": "2 séances (2K eau libre + 1.5K)",
-            "velo": "3 séances (35K + 25K + 55K)",
-            "course": "2 séances (8K fartlek + 10K tempo)",
-            "brick": "1 (55K vélo + 8K course)"
+            "natation": "2×1.5K",
+            "velo": "3 séances (40K + 40K + 40K brick dim)",
+            "course": "2×8K (mar + brick dim)",
+            "brick": "1 dim (40K vélo + 8K course)"
           },
-          "focus": ["Hill repeats (5x3min)", "Drafting natation", "Tempo course"]
+          "focus": ["Volume réduit", "Technique natation Vernets", "Récup samedi"]
         },
         {
           "num": 4,
           "date_debut": "20/07/2026",
           "date_fin": "26/07/2026",
-          "objectif": "Test : 40K vélo +800m D+ à allure race",
+          "objectif": "Bloc 2 — montée + test FTP",
           "volume": {
-            "natation": "2 séances (1.5K technique + 1.8K)",
-            "velo": "3 séances (40K + 30K + 60K)",
-            "course": "2 séances (10K fartlek + 6x800m)",
-            "brick": "1 (40K vélo + 5K course)"
+            "natation": "2×1.5K+ (1.5K + 1.8K)",
+            "velo": "3 séances (40K + FTP jeu + brick D+ dim)",
+            "course": "2×8K+ (10K fartlek + brick sim dim)",
+            "brick": "1 dim (40K vélo +800m D+ + 8K course)"
           },
-          "focus": ["Test vélo (40K +800m D+)", "Vitesse natation", "Intervals course"]
+          "focus": ["Test FTP jeudi", "Brick D+ simulation dimanche", "Récup samedi"]
         },
         {
           "num": 5,
           "date_debut": "27/07/2026",
           "date_fin": "02/08/2026",
-          "objectif": "Intensité vélo + race simulation natation",
+          "objectif": "Montée volume — test natation 1,5K",
           "volume": {
-            "natation": "2 séances (2K eau libre + 1.2K vitesse)",
-            "velo": "3 séances (30K intervalles + 35K + 60K)",
-            "course": "2 séances (10K tempo + 8x800m)",
-            "brick": "1 (60K vélo + 10K course)"
+            "natation": "2×1.5K+ (2K + test 1.5K ven)",
+            "velo": "3 séances (42K + 35K D+ + 50K dim)",
+            "course": "2×8K (12K tempo + brick dim)",
+            "brick": "1 dim (50K vélo + 8K course)"
           },
-          "focus": ["Hill repeats (5x5min)", "Drafting natation", "Brick long"]
+          "focus": ["Test 1,5K vendredi", "Plaine 50 km", "Récup samedi"]
         },
         {
           "num": 6,
           "date_debut": "03/08/2026",
           "date_fin": "09/08/2026",
-          "objectif": "Peak volume + TT simulation vélo",
+          "objectif": "Semaine récupération (−25 % vs S5)",
           "volume": {
-            "natation": "2 séances (1.8K technique + 1.5K)",
-            "velo": "3 séances (20K TT + 40K + 50K)",
-            "course": "2 séances (8K fartlek + 12K tempo)",
-            "brick": "1 (50K vélo + 8K course)"
+            "natation": "2×1.5K",
+            "velo": "3 séances (40K + 40K + 40K brick dim)",
+            "course": "2×8K (intervalles + brick dim)",
+            "brick": "1 dim (40K vélo + 8K course)"
           },
-          "focus": ["TT simulation (20K)", "Endurance natation", "Tempo course"]
+          "focus": ["Volume réduit", "Consolidation cols", "Récup samedi"]
         },
         {
           "num": 7,
           "date_debut": "10/08/2026",
           "date_fin": "16/08/2026",
-          "objectif": "Maintien intensité + hill repeats",
+          "objectif": "Bloc 3 — montée vers le pic + test 10K",
           "volume": {
-            "natation": "2 séances (2K race simulation + 1K vitesse)",
-            "velo": "3 séances (35K intervalles + 30K + 55K)",
-            "course": "2 séances (10K intervals + 8K fartlek)",
-            "brick": "1 (55K vélo + 6K course)"
+            "natation": "2×1.5K",
+            "velo": "3 séances (40K + 40K D+ + 50K brick dim)",
+            "course": "2×8K+ (test 10K mar + brick dim)",
+            "brick": "1 dim (50K vélo + 8K course)"
           },
-          "focus": ["Hill repeats (6x4min)", "Race pace natation", "Fartlek course"]
+          "focus": ["Test 10K mardi", "Tour du Vuache", "Récup samedi"]
         },
         {
           "num": 8,
           "date_debut": "17/08/2026",
           "date_fin": "23/08/2026",
-          "objectif": "Dernière grosse semaine avant mariage",
+          "objectif": "Pic avant mariage — test D+ lundi, mariage samedi 22/08",
           "volume": {
-            "natation": "2 séances (1.5K + 1.2K)",
-            "velo": "3 séances (40K + 25K + 50K)",
-            "course": "2 séances (8K tempo + 6x1K)",
-            "brick": "1 (50K vélo + 8K course)"
+            "natation": "2×1.5K (mer, ven)",
+            "velo": "2 séances (50K D+ test lun + seuil jeu)",
+            "course": "2×8K (endurance mar + brick 8K lun)",
+            "brick": "1 lun (50K vélo +1K D+ + 8K course)"
           },
-          "focus": ["Test vélo (50K +1K D+)", "Vitesse natation", "Intervals course"]
+          "focus": ["Test D+ lundi", "Seuil vélo jeudi", "Mariage samedi 22/08"]
         },
         {
           "num": 9,
           "date_debut": "24/08/2026",
           "date_fin": "30/08/2026",
-          "objectif": "Récupération active (mariage + vacances)",
+          "objectif": "Récupération active (vacances post-mariage)",
           "volume": {
-            "natation": "2 séances (1.5K + 1K)",
-            "velo": "2 séances (30K + 25K)",
-            "course": "1 séance (6K easy)",
+            "natation": "2×1.5K",
+            "velo": "2 séances (40K + 40K, 40K opt dim)",
+            "course": "1×8K",
             "brick": "0"
           },
-          "focus": ["Maintien léger", "Récupération"]
+          "focus": ["Plaisir", "Récupération", "Récup samedi"]
         },
         {
           "num": 10,
           "date_debut": "31/08/2026",
           "date_fin": "06/09/2026",
-          "objectif": "Reprise progressive + intensité",
+          "objectif": "Reprise progressive + test brick dimanche",
           "volume": {
-            "natation": "2 séances (1.8K + 1.2K)",
-            "velo": "3 séances (30K TT + 25K + 40K)",
-            "course": "2 séances (8K fartlek + 10K tempo)",
-            "brick": "1 (40K vélo + 5K course)"
+            "natation": "2×1.5K",
+            "velo": "3 séances (40K allure + 40K D+ + 40K brick test dim)",
+            "course": "2×8K+ (10K fartlek + brick test dim)",
+            "brick": "1 dim (40K vélo +800m D+ + 8K course)"
           },
-          "focus": ["TT simulation (30K)", "Race pace natation", "Tempo course"]
+          "focus": ["Test brick dimanche", "Salève Python", "Récup samedi"]
         },
         {
           "num": 11,
           "date_debut": "07/09/2026",
           "date_fin": "13/09/2026",
-          "objectif": "Taper léger (volume -30%)",
+          "objectif": "Taper léger (volume −30 %) + contrôle FTP",
           "volume": {
-            "natation": "2 séances (1.2K + 800m)",
-            "velo": "3 séances (25K + 20K + 30K)",
-            "course": "2 séances (6K easy + 5K fartlek)",
-            "brick": "1 (30K vélo + 5K course)"
+            "natation": "2×1.5K",
+            "velo": "3 séances (HT 40K eq + test FTP jeu + 40K brick dim)",
+            "course": "2×8K (fartlek + brick dim)",
+            "brick": "1 dim (40K vélo + 8K course)"
           },
-          "focus": ["Intervalles courts", "Technique natation", "Fartlek léger"]
+          "focus": ["Test FTP jeudi", "Intervalles courts", "Récup samedi"]
         },
         {
           "num": 12,
           "date_debut": "14/09/2026",
           "date_fin": "20/09/2026",
-          "objectif": "Taper strict (volume -50%)",
+          "objectif": "Taper strict — course dimanche 27/09 dans 7 jours",
           "volume": {
-            "natation": "2 séances (800m + 500m)",
-            "velo": "2 séances (20K + 15K)",
-            "course": "2 séances (5K easy + 3K)",
-            "brick": "1 (20K vélo + 3K course)"
+            "natation": "2×1.5K",
+            "velo": "3 séances (40K + 40K + 40K activation dim)",
+            "course": "1×8K",
+            "brick": "0"
           },
-          "focus": ["Ouverture", "Activation", "Visualisation"]
+          "focus": ["Activation courte", "Jeûne Genevois 14/09", "Récup samedi"]
         },
         {
           "num": 13,
           "date_debut": "21/09/2026",
           "date_fin": "27/09/2026",
-          "objectif": "Race Week (taper final)",
+          "objectif": "Race Week — M-Olympia dimanche 27/09/2026",
           "volume": {
-            "natation": "1 séance (500m)",
-            "velo": "2 séances (15K + 10K)",
-            "course": "1 séance (5K easy)",
+            "natation": "2×1.5K (lun + mer activation)",
+            "velo": "3 séances (mar + jeu ouverture + sam déblocage)",
+            "course": "RACE 27/09",
             "brick": "0"
           },
-          "focus": ["Détente", "Visualisation", "Hydratation"]
+          "focus": ["Repos vendredi", "Natation mercredi", "Déblocage vélo samedi", "RACE DAY dimanche 27/09"]
         }
       ],
       "tests": [
-        {"semaine": 4, "type": "Vélo FTP Test", "date": "23/07/2026", "details": "20 min all-out sur home-trainer ou route plate. FTP = Puissance moyenne x 0.95."},
-        {"semaine": 4, "type": "Natation 1.5K Time Trial", "date": "24/07/2026", "details": "1.5K en piscine ou eau libre. Objectif: <28:00."},
-        {"semaine": 8, "type": "Vélo FTP Test", "date": "20/08/2026", "details": "20 min all-out. Comparer avec test semaine 4."},
-        {"semaine": 8, "type": "Course 10K Time Trial", "date": "21/08/2026", "details": "10K standalone. Objectif: <40:00."},
-        {"semaine": 10, "type": "Brick Test", "date": "04/09/2026", "details": "40K vélo +800m D+ à allure race + 5K course. Objectif: vélo <1h25, course <22:00."}
+        {"semaine": 4, "type": "Vélo FTP Test", "date": "23/07/2026", "details": "20 min all-out sur home-trainer. FTP = Puissance moyenne x 0.95."},
+        {"semaine": 5, "type": "Natation 1.5K Time Trial", "date": "01/08/2026", "details": "1.5K en piscine ou eau libre. Objectif: <28:00."},
+        {"semaine": 7, "type": "Course 10K Time Trial", "date": "12/08/2026", "details": "10K bord du lac (mardi). Objectif: <40:00."},
+        {"semaine": 8, "type": "Vélo D+ Test", "date": "17/08/2026", "details": "50K + 1 000m D+ (Monnetier) + 8K course — lundi, avant mariage samedi."},
+        {"semaine": 10, "type": "Brick Test", "date": "06/09/2026", "details": "40K vélo +800m D+ à allure race + 8K course (dimanche). Objectif: vélo <1h25, course <22:00."},
+        {"semaine": 11, "type": "Vélo FTP Test", "date": "11/09/2026", "details": "20 min all-out. Comparer avec test semaine 4."}
       ]
     }
   }

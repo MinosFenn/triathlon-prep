@@ -47,6 +47,15 @@ export const DISCIPLINE_STYLES: Record<DisciplineKey, DisciplineStyle> = {
     border: "border-violet-400/30",
     glow: "shadow-violet-500/20",
   },
+  strength: {
+    label: "Renforcement",
+    shortLabel: "Renfo",
+    key: "strength",
+    color: "text-rose-300",
+    bg: "bg-rose-500/20",
+    border: "border-rose-400/30",
+    glow: "shadow-rose-500/20",
+  },
   recovery: {
     label: "Récupération",
     shortLabel: "Repos",
@@ -75,16 +84,17 @@ export function resolveDiscipline(raw: string): DisciplineStyle {
 }
 
 export const DISCIPLINE_CHART_COLORS: Record<
-  "swim" | "bike" | "run" | "brick",
+  "swim" | "bike" | "run" | "brick" | "strength",
   { earned: string; goal: string }
 > = {
   swim: { earned: "rgb(6 182 212 / 0.85)", goal: "rgb(6 182 212 / 0.22)" },
   bike: { earned: "rgb(249 115 22 / 0.85)", goal: "rgb(249 115 22 / 0.22)" },
   run: { earned: "rgb(34 197 94 / 0.85)", goal: "rgb(34 197 94 / 0.22)" },
   brick: { earned: "rgb(168 85 247 / 0.85)", goal: "rgb(168 85 247 / 0.22)" },
+  strength: { earned: "rgb(244 63 94 / 0.85)", goal: "rgb(244 63 94 / 0.22)" },
 };
 
-export const CHART_DISCIPLINES = ["swim", "bike", "run", "brick"] as const;
+export const CHART_DISCIPLINES = ["swim", "bike", "run", "brick", "strength"] as const;
 export type ChartDisciplineKey = (typeof CHART_DISCIPLINES)[number];
 
 export function getDisciplineStyle(key: DisciplineKey): DisciplineStyle {

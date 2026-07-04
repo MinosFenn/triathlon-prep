@@ -1,0 +1,27 @@
+{
+  "sessionDefaults": {
+    "swim": {
+      "venueIds": ["pool-vernets", "pool-lancy"],
+      "openWaterVenueId": "open-water-wilson"
+    },
+    "run": {
+      "trackVenueId": "track-bout-du-monde",
+      "routeIds": ["run-lac-plat-8", "run-rhone-valonne", "run-arve-12"]
+    },
+    "bike": {
+      "routeIds": [
+        "bike-plaine-44",
+        "bike-plaine-50",
+        "bike-saleve-python",
+        "bike-monnetier-cruseilles",
+        "bike-tour-vuache"
+      ]
+    }
+  },
+  "proximityHints": {
+    "pool-vernets": { "fromBaseId": "home", "minutesBike": 10 },
+    "pool-lancy": { "fromBaseId": "home", "minutesTransit": 20 },
+    "open-water-wilson": { "fromBaseId": "work-spaces-belair", "minutesTransit": 15 },
+    "track-bout-du-monde": { "fromBaseId": "home", "minutesTransit": 25 }
+  }
+}

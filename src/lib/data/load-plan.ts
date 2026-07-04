@@ -10,6 +10,7 @@ import type {
 } from "@/types";
 import { readContentFile } from "@/lib/content-path";
 import { resolveDiscipline } from "@/lib/discipline";
+import { isTestSessionTitle } from "@/lib/session-test";
 import { enrichSessionMeta } from "@/lib/session-meta";
 import {
   extractMarkdownTableRows,
@@ -72,7 +73,7 @@ function getWeekForEvent(event: PlanEvent): number | null {
   const eventMap: Record<string, number> = {
     mariage: 8,
     vacances: 9,
-    "Jeûne Genevois": 11,
+    "Jeûne Genevois": 12,
     race_day: 13,
   };
   return eventMap[event.type] ?? null;
@@ -80,10 +81,10 @@ function getWeekForEvent(event: PlanEvent): number | null {
 
 function formatEventLabel(event: PlanEvent): string {
   const labels: Record<string, string> = {
-    mariage: "Mariage 21–23/08 → volume −50%",
-    vacances: "Vacances 24–30/08 → 1–2 séances/jour",
-    "Jeûne Genevois": "Jeûne Genevois (14/09) → longue sortie + brick",
-    race_day: "RACE DAY: 27/09/2026",
+    mariage: "Mariage samedi 22/08 → pas de séance ce jour-là",
+    vacances: "Vacances 24–30/08 → séances légères",
+    "Jeûne Genevois": "Jeûne Genevois (14/09) → taper strict, hydratation",
+    race_day: "RACE DAY dimanche 27/09/2026",
   };
   return labels[event.type] ?? `${event.type} (${event.date}) → ${event.adaptation}`;
 }
@@ -174,14 +175,17 @@ function parseTrainingWeekMarkdown(content: string): TrainingSession[] {
   return rows
     .filter((row) => row[0] && row[0] !== "Jour")
     .map((row) => {
-      const [jour, disciplineRaw, seance, details, zone, materiel] = row;
+      const jour = row[0];
+      const disciplineRaw = row[1];
+      const seance = row[2];
+      const hasLocation = row.length >= 7;
+      const location = hasLocation ? (row[3] ?? "") : "";
+      const details = hasLocation ? row[4] : row[3];
+      const zone = hasLocation ? row[5] : row[4];
+      const materiel = hasLocation ? row[6] : row[5];
       const style = resolveDiscipline(disciplineRaw);
 
-      const isTest =
-        seance.toLowerCase().includes("test") ||
-        details.toLowerCase().includes("test") ||
-        seance.toLowerCase().includes("ftp") ||
-        seance.toLowerCase().includes("tt");
+      const isTest = isTestSessionTitle(seance);
 
       const normalizedZone = normalizeZone(zone);
       const meta = enrichSessionMeta(style.key, seance, details, normalizedZone);
@@ -197,6 +201,7 @@ function parseTrainingWeekMarkdown(content: string): TrainingSession[] {
         details,
         zone: normalizedZone,
         material: materiel === "-" ? "" : materiel,
+        location: location === "-" ? "" : location,
         notes: isTest ? `TEST: ${details}` : "",
         segments: meta.segments,
         estimatedMinutes: meta.estimatedMinutes,
@@ -301,6 +306,7 @@ function generateFallbackSessions(weekNum: number): TrainingSession[] {
         details,
         zone,
         material: "",
+        location: "",
         notes: i === 6 ? "Arriver 1h avant. Échauffement complet." : "",
         segments: meta.segments,
         estimatedMinutes: meta.estimatedMinutes,
@@ -324,6 +330,7 @@ function generateFallbackSessions(weekNum: number): TrainingSession[] {
       details,
       zone: "-",
       material: "",
+      location: "",
       notes: "",
       segments: meta.segments,
       estimatedMinutes: meta.estimatedMinutes,

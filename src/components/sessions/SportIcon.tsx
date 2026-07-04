@@ -41,6 +41,14 @@ export function SportIcon({ disciplineKey, className = "w-5 h-5" }: SportIconPro
           <path d="M8 18h8M12 5v8M10 7l2-2 2 2" />
         </svg>
       );
+    case "strength":
+      return (
+        <svg className={`${className} ${style.color}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M6.5 6.5 3 10v4l3.5 3.5" />
+          <path d="M17.5 6.5 21 10v4l-3.5 3.5" />
+          <path d="M9 12h6" />
+        </svg>
+      );
     default:
       return (
         <svg className={`${className} ${style.color}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">

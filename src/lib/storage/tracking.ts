@@ -1,6 +1,6 @@
 import type { DisciplineKey, MentalData, StrengthData, StretchingData, TrainingSession } from "@/types";
 import { CHART_DISCIPLINES, type ChartDisciplineKey } from "@/lib/discipline";
-import { computeDayBonusPoints } from "@/lib/bonus-points";
+import { computeDayBonusPoints, buildActivityTrackingId } from "@/lib/bonus-points";
 import { buildDaySchedule } from "@/lib/day-schedule";
 import type { DailySupplementsByWeek } from "@/lib/supplements-daily";
 import { WEEK_COMPLETION_BONUS_RATIO } from "@/lib/session-meta";
@@ -22,6 +22,7 @@ function emptyWeekDisciplines(): WeekDisciplinePoints {
     bike: { pointsPossible: 0, pointsEarned: 0, planned: 0, completed: 0 },
     run: { pointsPossible: 0, pointsEarned: 0, planned: 0, completed: 0 },
     brick: { pointsPossible: 0, pointsEarned: 0, planned: 0, completed: 0 },
+    strength: { pointsPossible: 0, pointsEarned: 0, planned: 0, completed: 0 },
   };
 }
 
@@ -180,6 +181,7 @@ export function computeGlobalStats(
     bike: { planned: 0, completed: 0, pointsEarned: 0, pointsPossible: 0 },
     run: { planned: 0, completed: 0, pointsEarned: 0, pointsPossible: 0 },
     brick: { planned: 0, completed: 0, pointsEarned: 0, pointsPossible: 0 },
+    strength: { planned: 0, completed: 0, pointsEarned: 0, pointsPossible: 0 },
     recovery: { planned: 0, completed: 0, pointsEarned: 0, pointsPossible: 0 },
   };
 
@@ -191,9 +193,11 @@ export function computeGlobalStats(
   for (let w = 1; w <= weekCount; w++) {
     const sessions = sessionsByWeek[w] ?? [];
     const tracking = getWeekTracking(w);
+    const bonus = getBonusTracking(w);
     let weekCompleted = 0;
     let weekPointsEarned = 0;
     let weekPointsPossible = 0;
+    let weekPlanned = 0;
     const weekDisciplines = emptyWeekDisciplines();
 
     sessions.forEach((session, index) => {
@@ -201,6 +205,7 @@ export function computeGlobalStats(
       const isRecovery = session.disciplineKey === "recovery";
       if (isRecovery) return;
 
+      weekPlanned++;
       totalPlanned++;
       weekPointsPossible += session.points;
       totalPointsPossible += session.points;
@@ -214,8 +219,8 @@ export function computeGlobalStats(
       }
 
       if (tracking[key]?.completed) {
-        totalCompleted++;
         weekCompleted++;
+        totalCompleted++;
         weekPointsEarned += session.points;
         totalPointsEarned += session.points;
         byDiscipline[session.disciplineKey].completed++;
@@ -229,7 +234,41 @@ export function computeGlobalStats(
       }
     });
 
-    const weekPlanned = sessions.filter((s) => s.disciplineKey !== "recovery").length;
+    if (context?.strength) {
+      for (const strengthSession of context.strength.sessionsByWeek[w] ?? []) {
+        const dayIndex = sessions.findIndex(
+          (s) => s.dayShort === strengthSession.day
+        );
+        if (dayIndex < 0) continue;
+
+        weekPlanned++;
+        totalPlanned++;
+        weekPointsPossible += strengthSession.points;
+        totalPointsPossible += strengthSession.points;
+        byDiscipline.strength.planned++;
+        byDiscipline.strength.pointsPossible += strengthSession.points;
+        weekDisciplines.strength.pointsPossible += strengthSession.points;
+        weekDisciplines.strength.planned++;
+
+        const trackingId = buildActivityTrackingId(
+          w,
+          dayIndex,
+          "renforcement",
+          0
+        );
+        if (bonus[trackingId]) {
+          weekCompleted++;
+          totalCompleted++;
+          weekPointsEarned += strengthSession.points;
+          totalPointsEarned += strengthSession.points;
+          byDiscipline.strength.completed++;
+          byDiscipline.strength.pointsEarned += strengthSession.points;
+          weekDisciplines.strength.pointsEarned += strengthSession.points;
+          weekDisciplines.strength.completed++;
+        }
+      }
+    }
+
     let weekBonus = 0;
     if (weekPlanned > 0 && weekCompleted >= weekPlanned) {
       weekBonus = Math.round(weekPointsPossible * WEEK_COMPLETION_BONUS_RATIO);
