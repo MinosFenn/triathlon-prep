@@ -18,6 +18,7 @@ import { OverviewTab } from "@/components/overview/OverviewTab";
 import { DayTab } from "@/components/sessions/DayTab";
 import { SportIcon } from "@/components/sessions/SportIcon";
 import { BottomNav } from "@/components/layout/BottomNav";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import {
   getSavedCurrentWeek,
   getWeekTracking,
@@ -219,34 +220,37 @@ export function TriathlonWeeklyPlan({ data }: TriathlonWeeklyPlanProps) {
       <header className="glass-header sticky top-0 z-50">
         <div className="max-w-2xl mx-auto px-4 py-4">
           <div className="flex items-start justify-between gap-4">
-            <div>
+            <div className="flex-1">
               <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-indigo-400">
                 Prep Triathlon
               </p>
-              <h1 className="text-lg font-bold text-white leading-tight mt-0.5">
+              <h1 className="text-lg font-bold leading-tight mt-0.5" style={{ color: 'var(--text-primary)' }}>
                 {plan.athlete.prenom} — {plan.athlete.raceName}
               </h1>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
                 Objectif {plan.athlete.raceGoal} · {plan.athlete.raceDate}
                 {garminConnected && (
                   <span className="ml-2 text-emerald-400">· Garmin sync</span>
                 )}
               </p>
             </div>
-            <select
-              value={currentWeek}
-              onChange={(e) => {
-                setCurrentWeek(parseInt(e.target.value, 10));
-                setActiveTab("overview");
-              }}
-              className="glass-select px-3 py-2 rounded-xl text-xs font-medium shrink-0 max-w-[140px]"
-            >
-              {plan.weeks.map((w) => (
-                <option key={w.num} value={w.num}>
-                  S{w.num} · {w.dates.split(" – ")[0]}
-                </option>
-              ))}
-            </select>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <select
+                value={currentWeek}
+                onChange={(e) => {
+                  setCurrentWeek(parseInt(e.target.value, 10));
+                  setActiveTab("overview");
+                }}
+                className="glass-select px-3 py-2 rounded-xl text-xs font-medium shrink-0 max-w-[140px]"
+              >
+                {plan.weeks.map((w) => (
+                  <option key={w.num} value={w.num}>
+                    S{w.num} · {w.dates.split(" – ")[0]}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       </header>
